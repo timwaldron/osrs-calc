@@ -1,5 +1,3 @@
-# osrs-calc
-
 <h1>OldSchool RuneScape Skill Calculator</h1>
 
 <p align="center">
