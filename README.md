@@ -3,7 +3,7 @@
 <h1>OldSchool RuneScape Skill Calculator</h1>
 
 <p align="center">
-  <img width="300" height="150" src="https://imgcache.rune-server.ee/34c09dc813a25ee687c9538d85ec228c4ca81b20/687474703a2f2f7777772e727367672e6e6c2f696d616765732f636f6e74656e742f727330376b6f6f702e706e67">
+  <img width="1050" height="250" src=https://www.gamegrin.com/assets/Uploads/_resampled/croppedimage640200-RuneScape2-18212539.jpg>
 </p>
 
 <h3>Project Outline</h3>
