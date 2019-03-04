@@ -3,9 +3,9 @@
   <h1>OldSchool RuneScape Skill Calculator</h1>
   <br>
   <h3>Project Outline</h3>
-_The Old School RuneScape skill calculator was built as a terminal application in order to meet the requirements of the first assignment given at CoderAcademy. 
-The end product will be an interactive tool that allows players of RuneScape to bring down their player data. 
-The application will then respond to user input and give calculations on chosen skills and  outline recommendations based on what the player can be doing in order to train that specific skill._
+The Old School RuneScape skill calculator was built as a terminal application in order to meet the requirements of the first assignment given at CoderAcademy. 
+_The end product will be an interactive tool that allows players of RuneScape to bring down their player data._
+_The application will then respond to user input and give calculations on chosen skills and  outline recommendations based on what the player can be doing in order to train that specific skill._
 </p>
 
 
