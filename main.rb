@@ -1,32 +1,38 @@
+require "./osrs-api-wrapper"
+
 class Main
   def initialize()
     @username = nil
     @choice = nil
-    app
-  end
-
-  def app
+    @player_data = false
+    @osrs_api = OSRS_Api_Wrapper.new()
     login
-    menu
   end
 
   def login
-    puts `clear`
-    puts "Welcome to Runescape"
-    puts "Please enter existing username"
-    @username = gets.strip.downcase
+    while true
+      while @player_data == false
+        puts `clear`
+        puts "Welcome to Runescape"
+        puts "Please enter existing username"
+        @username = gets.strip.downcase
+        @player_data = @osrs_api.username_exists?(@username)
+      end
+      menu
+    end
   end
 
   def menu
-    puts `clear`
-    puts "--------- Old School RuneScape skill calculator ----------"
-    puts "----------------------- Options ------------------------"
-    puts "Welcome ~~~#{@username}~~~"
-    puts "View your Skills - Press 1"
-    puts "Skill Calculator - Press 2"
-    puts "Enter a new username - Press 3"
-    # choice = gets.strip
-    loop_logic(gets.strip.to_i)
+    while @player_data != false
+      puts `clear`
+      puts "--------- Old School RuneScape skill calculator ----------"
+      puts "----------------------- Options ------------------------"
+      puts "Welcome ~~~#{@username}~~~"
+      puts "View your Skills - Press 1"
+      puts "Skill Calculator - Press 2"
+      puts "Enter a new username - Press 3"
+      loop_logic(gets.strip.to_i)
+    end
   end
 
   def loop_logic(choice)
@@ -37,18 +43,21 @@ class Main
       skill_calculator
     when 3
       puts "test 3"
-      app
+      login
     end
   end
 
   def display_skills
     puts "Skills: ~~~#{@username}~~~"
-    menu
+    @player_data.each do |skill_data|
+      puts skill_data
+    end
+    gets.strip.downcase
   end
 
   def skill_calculator
     # calculate skills
-    menu
+    gets.strip.downcase
   end
 end
 
