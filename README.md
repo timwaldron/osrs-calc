@@ -8,7 +8,8 @@
 
 The Old School RuneScape skill calculator was built as a terminal application in order to meet the requirements of the first assignment given at CoderAcademy. 
 Have you ever wondered how many trout you need to catch in order to get a 99? or how many goblins you need to slay to get 60 attack to wield your DDS? 
--
+
+
 Well then the Oldschool RuneScape Skill Calculator is for YOU
 <br>
 This calculator will be an interactive tool that allows players of RuneScape to bring down their player data.
