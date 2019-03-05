@@ -1,33 +1,55 @@
-# osrs-calc
+<p align="center">
+  <img width="1050" height="250" src=https://www.gamegrin.com/assets/Uploads/_resampled/croppedimage640200-RuneScape2-18212539.jpg></p>
+  
+<h1>Oldschool RuneScape Skill Calculator</h1>
+<br>
+<h3>Project Outline</h3>
+<br>
 
-<h1>OldSchool RuneScape Skill Calculator</h1>
+The Old School RuneScape skill calculator was built as a terminal application in order to meet the requirements of the first assignment given at CoderAcademy. 
+Have you ever wondered how many trout you need to catch in order to get a 99? or how many goblins you need to slay to get 60 attack to wield your DDS? 
 
-![OSRS logo](https://imgcache.rune-server.ee/34c09dc813a25ee687c9538d85ec228c4ca81b20/687474703a2f2f7777772e727367672e6e6c2f696d616765732f636f6e74656e742f727330376b6f6f702e706e67)
 
-_This text will be italic_
-_This will also be italic_
+Well then the Oldschool RuneScape Skill Calculator is for YOU
+<br>
+This calculator will be an interactive tool that allows players of RuneScape to bring down their player data.
+The application will then respond to user input and give calculations on chosen skills and  outline recommendations based on what the player can be doing in order to train that specific skill.
+<br>
 
-**This text will be bold**
-**This will also be bold**
-  
-  
-_You **can** combine them_
-  
-  
-Lists
-Unordered
-- Item 1
-- Item 2
-  - Item 2a
-  - Item 2b
-    Ordered
-  
-  
-1. Item 1
-1. Item 2
-1. Item 3
-   1. Item 3a
-   1. Item 3b
+<h4>Instructions for use</h4>
+*enter username into OSRS-calc
+*choose option
+*view data
+*Return to main menu screen or exit application
+*enjoy playing RuneScape
 
-   ![GitHub Logo](/images/logo.png)
-   Format: ![Alt Text](url)
+[What is Old School RuneScape?](https://en.wikipedia.org/wiki/Old_School_RuneScape)
+
+[GitHub Repository](https://github.com/timwaldron/osrs-calc)
+
+
+
+README explains the higher level structure of the app (e.g. why modules or functions were used or why separate files were utilized).
+-
+README shows extensive evidence of thoughtful planning into the overall code structure within the app
+
+
+
+Shows evidence of having considered some possible outcomes of use of the app (harm, offence, etc).
+-
+Comprehensive discussion of the potential legal, moral, ethical, cultural and safety issues
+
+
+
+ evidence of having considered broader societal impact of app.
+-
+^^^^^ do another little few lines about user data for people usig the app specifically
+
+
+This criterion is linked to a Learning Outcome Presents evidence of planning in order to achieve the stated outcome.
+- 
+README shows extensive evidence of planning toward the stated goal of the app. this will be shown by screenshots of planning and workflow
+
+
+
+
