@@ -18,9 +18,13 @@ The application will then respond to user input and give calculations on chosen 
 
 <h4>Instructions for use</h4>
 *enter username into OSRS-calc
+
 *choose option
+
 *view data
+
 *Return to main menu screen or exit application
+
 *enjoy playing RuneScape
 
 [What is Old School RuneScape?](https://en.wikipedia.org/wiki/Old_School_RuneScape)
