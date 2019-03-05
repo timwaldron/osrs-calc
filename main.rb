@@ -1,8 +1,7 @@
 class Main
   def initialize()
-    @ign = nil
+    @username = nil
     @choice = nil
-
     app
   end
 
@@ -15,12 +14,14 @@ class Main
     puts `clear`
     puts "Welcome to Runescape"
     puts "Please enter existing username"
-    ign = gets.strip.downcase
+    @username = gets.strip.downcase
   end
 
   def menu
+    puts `clear`
     puts "--------- Old School RuneScape skill calculator ----------"
     puts "----------------------- Options ------------------------"
+    puts "Welcome ~~~#{@username}~~~"
     puts "View your Skills - Press 1"
     puts "Skill Calculator - Press 2"
     puts "Enter a new username - Press 3"
@@ -32,18 +33,8 @@ class Main
     case choice
     when 1
       display_skills
-      puts "enter to exit"
-      input = gets.strip
-      if ""
-        app
-      end
     when 2
       skill_calculator
-      puts "enter to exit"
-      input = gets.strip
-      if ""
-        app
-      end
     when 3
       puts "test 3"
       app
@@ -51,9 +42,13 @@ class Main
   end
 
   def display_skills
+    puts "Skills: ~~~#{@username}~~~"
+    menu
   end
 
   def skill_calculator
+    # calculate skills
+    menu
   end
 end
 
