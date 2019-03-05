@@ -1,4 +1,4 @@
-require './osrs-api-wrapper'
+require './osrs_api_wrapper'
 require 'awesome_print'
 require 'tty-spinner'
 
