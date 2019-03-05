@@ -65,7 +65,3 @@ class TodoItem
     @todo = todo
   end
 end
-
-list = Todolist.new
-
-list.todo_app
