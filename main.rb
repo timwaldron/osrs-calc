@@ -1,6 +1,7 @@
 require "./osrs-api-wrapper"
 require "awesome_print"
 
+
 class Main
   def initialize()
     @username = nil
@@ -31,7 +32,7 @@ class Main
       puts "Welcome ~~~#{@username}~~~"
       puts "View your Skills - Press 1"
       puts "Skill Calculator - Press 2"
-      puts "Enter a new username - Press 3"
+      puts "Return to login screen - Press 3"
       loop_logic(gets.strip.to_i)
     end
   end
@@ -57,7 +58,14 @@ class Main
   end
 
   def skill_calculator
-    # calculate skills
+    puts `clear`
+    puts "Calculators: ~~~#{@username}~~~"
+    puts ""
+    puts "1: Woodcutting"
+    puts "2: Firemaking"
+    puts "3: Fishing"
+    puts "4: Cooking"
+    puts ""
     gets.strip.downcase
   end
 end
