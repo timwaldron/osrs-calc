@@ -1,4 +1,5 @@
 require "./osrs-api-wrapper"
+require "awesome_print"
 
 class Main
   def initialize()
@@ -42,16 +43,16 @@ class Main
     when 2
       skill_calculator
     when 3
-      puts "test 3"
-      login
+      @player_data = false
     end
   end
 
   def display_skills
-    puts "Skills: ~~~#{@username}~~~"
+    puts "Skills:   ~~~~~~~~~~~~~#{@username}~~~~~~~~~~~~~"
     @player_data.each do |skill_data|
-      puts skill_data
+      ap skill_data, :indent => -2, :multiline => false
     end
+    puts "Enter enter to return to the menu"
     gets.strip.downcase
   end
 
