@@ -48,11 +48,23 @@ class Main
     end
   end
 
+  #   def display_skills
+  #     puts "Skills:   ~~~~~~~~~~~~~#{@username}~~~~~~~~~~~~~"
+  #     @player_data.each do |skill_data|
+  #       ap skill_data, :indent => -2, :multiline => false
+  #     end
+  #     puts "Enter enter to return to the menu"
+  #     gets.strip.downcase
+  #   end
+
   def display_skills
     puts "Skills:   ~~~~~~~~~~~~~#{@username}~~~~~~~~~~~~~"
-    @player_data.each do |skill_data|
-      ap skill_data, :indent => -2, :multiline => false
+    puts "-----------"
+    @player_data.each do |key, value|
+      puts value
+      print key
     end
+    puts "--------------------------------------------------"
     puts "Enter enter to return to the menu"
     gets.strip.downcase
   end
