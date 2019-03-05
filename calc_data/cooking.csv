@@ -1,0 +1,14 @@
+food_name,level,experience,item_id
+Shrimps,1,30,317
+Sardine,1,40,327
+Anchovies,1,30,321
+Herring,5,50,345
+Trout,15,70,355
+Salmon,25,90,331
+Tuna,30,100,359
+Lobster,40,120,377
+Swordfish,45,140,371
+Monkfish,62,150,7944
+Shark,80,210,383
+Dark crab,90,215,11934
+Manta ray,91,216.2,389
