@@ -1,7 +1,6 @@
 require 'net/http'
 require 'csv'
 require 'json'
-require 'pry'
 
 class OSRS_Api_Wrapper
     # Downloads, evaluates then returns API data (Grand Exchange/Hiscore)
