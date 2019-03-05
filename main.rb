@@ -1,4 +1,6 @@
 require "./osrs-api-wrapper"
+require "awesome_print"
+require "colorizestring"
 
 class Main
   def initialize()
@@ -56,7 +58,11 @@ class Main
   end
 
   def skill_calculator
-    # calculate skills
+    puts `clear`
+    puts "Calculators: ~~~#{@username}~~~"
+    puts ""
+    puts ""
+
     gets.strip.downcase
   end
 end
