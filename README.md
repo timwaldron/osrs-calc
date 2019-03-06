@@ -28,12 +28,12 @@ The Buddy will be an interactive application that allows players of RuneScape to
 
 ### Who It's For
 
-Old School RuneScape skill calculator is for any individual that plays the game RuneScape. Simply enter your name and use the Buddy as a companion as you "Scape"
+Old School RuneScape Buddy is for any individual that plays the game RuneScape. Simply enter your name and use the Buddy as a companion as you "Scape"
 
 ### How It Works
 
-- outline of the technologies used
-  Shows evidence of having considered accessibility.
+The Old School RuneScape Buddy works by utilising the Net/HTTP gem which can collect data from the from RuneScape's API, then run calculations based on the data it received (Data received is parsed in either CSV or JSON form, so the project has utilised those gems as well). A user can enter their in-game-name and it will extract data from the hiscores and sort it into usable data for calculations and bragging-rights. The calculations require two things; a copy of a users hiscore data (which will validate before you can continue to the calculators) and a folder in your current working directory labeled 'calc_data' that contains a list of skill data in a CSV format. If you don't have the 'calc_data' directory or each skill in the array **@available_calcs** listed in **skill_calcs.rb** CSV file it will pull it from the master branch of this repository. You are able to customize the CSV files to include training methods that my be unpopular (E.g Anchovy Pizzas, Lava Eels, Bread, etc), due to these files only including popular training methods to cut down on terminal spam.
+
 
 ### Usage
 
@@ -42,13 +42,18 @@ Old School RuneScape skill calculator is for any individual that plays the game 
 ### Please note
 
 Old School RuneScape Buddy
+
+The current version of Old School Runescape Buddy is capible of downloading a user's hiscore data which is freely accessible to anyone via the hiscore web page (https://secure.runescape.com/m=hiscore_oldschool/overall.ws). OSRS Buddy doesn't send or store the data it retrieves for you and will be disposed of after exiting the terminal application. It does however have the ability to add/delete notes, which are stored locally on your machine. There's an option to delete this only instance of the file within the application or manually by deleteing **notebook.txt** out of the current working directory of where you ran this script.
+
 three sentences how i have discussed the moral and ethical issues relating to user data<br>
 three sentences how i have discussed the moral and ethical issues relating to use of the app<br>
 
 A moral implication may arise when using the Buddy due to users wanting to reach their entered goals. Their health may be negatively impacted due to lack of physical activity.
-For example if a user of the Buddy calculated they needed to fish 13004 to get to their desired Skill Level of 80 and proceeded not to leave their computer for 12 hours.
+For example: A user of the Buddy calculated they needed to catch 13,004 fish to get to their desired Skill Level of 80 and proceeded not to leave their computer for 12 hours.
 
 ### Why we did what we did
+
+As both colloaborators of this project have been heavy Old School RuneScape players at one point or another during their lives this idea for a terminal app seemed more appropriate by the second while brainstorming ideas.
 
 ## README explains the higher level structure of the app (e.g. why modules or functions were used or why separate files were utilized).<br>
 
@@ -60,8 +65,7 @@ README shows outstanding evidence of how this project might be extended and work
 
 ### How Everything Went
 
-Any Problems?
-did we change anything from intial goals?
+As this project was very well thought-out we didn't run into any complete roadblocks. There were teething issues along the way as we had to parse and play with different data types, as expect with any project you work on. We have changed the name from Old School RuneScape Skill Calculator to Old School RuneScape Buddy as our initial goals evolved from a calculation based terminal app to what will eventually be a one-stop-shop for all your Old School RuneScape needs.
 
 Shows evidence of having attempted to meet the initial design specifications, or rationale as to why things changed during development.
 

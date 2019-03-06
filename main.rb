@@ -32,7 +32,6 @@ class Main
       pls_or_sorry_pls_string = "Please" # If they enter a username not on the OSRS hiscores
       while @player_data == false
         print `clear`
-        puts "       Welcome to the" # Below looks mangled, but because it uses the escape sequence I had to replace every '\' with '\\'
         ascii_splash
         print "#{pls_or_sorry_pls_string} enter a valid username (or '!exit' to quit): "
 
