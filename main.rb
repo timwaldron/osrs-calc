@@ -19,7 +19,7 @@ class Main
     while true
       pls_or_sorry_pls_string = "Please" # If they enter a username not on the OSRS hiscores
       while @player_data == false
-        puts `clear`
+        print `clear`
         puts "       Welcome to the" # Below looks mangled, but because it uses the escape sequence I had to replace every '\' with '\\'
         puts " ____                   ____                         "
         puts "|  _ \\ _   _ _ __   ___/ ___|  ___ __ _ _ __   ___   "
@@ -28,7 +28,7 @@ class Main
         puts "|_| \\_\\\\__,_|_| |_|\\___|____/ \\___\\__,_| .__/ \\___|  "
         puts "                                       |_|           "
         puts ""
-        puts "   S  K  I  L  L      C  A  L  C  U  L  A  T  O  R"
+        puts "  S  K  I  L  L      C  A  L  C  U  L  A  T  O  R"
         puts ""
         print "#{pls_or_sorry_pls_string} enter a valid username (or '!exit' to quit): "
 
@@ -53,7 +53,7 @@ class Main
 
   def menu
     while @player_data != false
-      puts `clear`
+      print `clear`
       puts "--------- Old School RuneScape skill calculator ----------"
       puts "----------------------- Options ------------------------"
       puts "Welcome ~~~#{@username}~~~"
@@ -100,31 +100,31 @@ class Main
     gets.strip.downcase
   end
 
-  def capitalize_string(string)
-    return string[0].upcase + string[1...string.length]
-  end
-
   def skill_calculator
     SkillCalcs::check_calc_data_files()
-    puts `clear`
-    puts "Calculators: ~~~#{@username}~~~"
-    puts ""
+    skill_option = nil
     
-    calcs_available = SkillCalcs::get_available_calcs()
+    while skill_option != "!exit"
+        print `clear`
+        puts "Calculators: ~~~#{@username}~~~"
+        puts ""
+        
+        calcs_available = SkillCalcs::get_available_calcs()
+        calcs_available.each_with_index do |skill_name, index|
+            puts("#{index + 1}: #{SkillCalcs::capitalize_string(skill_name)}")
+        end
 
-    calcs_available.each_with_index do |skill_name, index|
-        puts("#{index + 1}: #{capitalize_string(skill_name)}")
+        puts ""
+
+        print "Please select an option (or '!exit' to quit): "
+        skill_option = gets().strip
+
+        if (skill_option == "!exit")
+            break
+        end
+
+        SkillCalcs::load_calculator(@player_data, calcs_available[skill_option.to_i - 1])
     end
-
-    puts ""
-    print "Please select an option (or '!exit' to quit): "
-    skill_option = gets().strip
-
-    if (skill_option == "!exit")
-        return nil
-    end
-
-    SkillCalcs::load_calculator(@player_data, calcs_available[skill_option.to_i - 1])
   end
 end
 
