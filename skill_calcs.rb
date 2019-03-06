@@ -1,3 +1,2 @@
 module SkillCalcs
-
 end
