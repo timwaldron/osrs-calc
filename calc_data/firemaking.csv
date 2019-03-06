@@ -1,4 +1,4 @@
-log_type,level,experience,item_id
+item,level,experience,item_id
 Normal,1,40,1511
 Oak,15,60,1521
 Willow,30,90,1519

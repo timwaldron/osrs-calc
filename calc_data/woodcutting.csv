@@ -1,4 +1,4 @@
-tree_type,level,experience,item_id
+item,level,experience,item_id
 Normal,1,25,1511
 Oak,15,37.5,1521
 Willow,30,67.5,1519

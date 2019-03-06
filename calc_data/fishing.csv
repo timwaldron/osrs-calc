@@ -1,4 +1,4 @@
-fish_type,level,experience,item_id
+item,level,experience,item_id
 Shrimps,1,10,317
 Sardine,5,20,327
 Herring,10,39,345
