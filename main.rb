@@ -1,14 +1,17 @@
-require "./osrs_api_wrapper"
-require "awesome_print"
-require "tty-spinner"
+require_relative './skill_calcs'
+require './osrs_api_wrapper'
 require "./todo"
+require 'tty-spinner'
+require 'awesome_print'
 
 class Main
+    include SkillCalcs
+
   def initialize()
     @username = nil
     @choice = nil
     @player_data = false
-    @osrs_api = OSRS_Api_Wrapper.new()
+    # @osrs_api = OSRS_Api_Wrapper.new()
     login
   end
 
@@ -35,10 +38,10 @@ class Main
           exit!
         end
 
-        spinner = TTY::Spinner.new("[:spinner] Checking if #{@username} exists ...", format: :classic)
+        spinner = TTY::Spinner.new("[:spinner] Checking if #{@username} exists... ", format: :classic)
         spinner.auto_spin # Automatic animation with default interval
-        @player_data = @osrs_api.get_hiscore_data(@username)
-        spinner.stop("Done!") # Stop animation
+        @player_data = OSRS_Api_Wrapper::get_hiscore_data(@username)
+        spinner.stop('Done!') # Stop animation
 
         if (@player_data == false) # If it player data returns false it wasn't sucessful.
           pls_or_sorry_pls_string = "Sorry,"
@@ -97,16 +100,31 @@ class Main
     gets.strip.downcase
   end
 
+  def capitalize_string(string)
+    return string[0].upcase + string[1...string.length]
+  end
+
   def skill_calculator
+    SkillCalcs::check_calc_data_files()
     puts `clear`
     puts "Calculators: ~~~#{@username}~~~"
     puts ""
-    puts "1: Woodcutting"
-    puts "2: Firemaking"
-    puts "3: Fishing"
-    puts "4: Cooking"
+    
+    calcs_available = SkillCalcs::get_available_calcs()
+
+    calcs_available.each_with_index do |skill_name, index|
+        puts("#{index + 1}: #{capitalize_string(skill_name)}")
+    end
+
     puts ""
-    gets.strip.downcase
+    print "Please select an option (or '!exit' to quit): "
+    skill_option = gets().strip
+
+    if (skill_option == "!exit")
+        return nil
+    end
+
+    SkillCalcs::load_calculator(@player_data, calcs_available[skill_option.to_i - 1])
   end
 end
 

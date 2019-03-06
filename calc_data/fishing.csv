@@ -1,4 +1,4 @@
-fish_type,level,experience,item_id
+item,level,experience,item_id
 Shrimps,1,10,317
 Sardine,5,20,327
 Herring,10,39,345
@@ -11,4 +11,4 @@ Swordfish,50,100,371
 Monkfish,62,120,7944
 Shark,76,110,383
 Dark Crab,90,215,11934
-Raw Manta Ray,91,216.2,389
+Manta Ray,91,216.2,389
