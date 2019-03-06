@@ -1,7 +1,12 @@
 <p align="center">
   <img width="1050" height="250" src=https://www.gamegrin.com/assets/Uploads/_resampled/croppedimage640200-RuneScape2-18212539.jpg></p>
   
-# Oldschool RuneScape Skill Calculator
+<h1 align="center"> 
+Oldschool RuneScape Skill Calculator
+</h1>
+
+<br>
+
 ## Project Outline
 
 
