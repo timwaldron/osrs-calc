@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="1050" height="250" src=https://www.gamegrin.com/assets/Uploads/_resampled/croppedimage640200-RuneScape2-18212539.jpg></p>
+  <img width="1050" height="250" src=./docs/osrs.jpg></p>
   
 <h1 align="center"> 
 Oldschool RuneScape Buddy
@@ -25,12 +25,12 @@ The Buddy will be an interactive application that allows players of RuneScape to
 6. Enjoy playing RuneScape
 7. Go outside
 
-### Who It's For
+### Who Its For
 
-Old School RuneScape skill calculator is for any individual that plays the game RuneScape. Simply enter your name and use the Buddy as a companion as you "Scape"
+Old School RuneScape Buddy is for any individual that plays the game RuneScape. Simply enter your name and use the Buddy as a companion as you "Scape"
 
 ### How It Works
-The Old School RuneScape Buddy works by utilising the Net/HTTP gem which can collect data from the from RuneScape's API, then run calculations based on the data it received (Data received is parsed in either CSV or JSON form, so the project has utilised those gems as well). A user can enter their in-game-name and it will extract data from the hiscores and sort it into usable data for calculations and bragging-rights. The calculations require two things; a copy of a users hiscore data (which will validate before you can continue to the calculators) and a folder in your current working directory labeled 'calc_data' that contains a list of skill data in a CSV format. If you don't have the 'calc_data' directory or each skill in the array **@available_calcs** listed in **skill_calcs.rb** CSV file it will pull it from the master branch of this repository. You are able to customize the CSV files to include training methods that my be unpopular (E.g Anchovy Pizzas, Lava Eels, Bread, etc), due to these files only including popular training methods to cut down on terminal spam.
+The Old School RuneScape Buddy works by utilising the Net/HTTP gem which can collect data from the from RuneScape's API, then run calculations based on the data it received (Data received is parsed in either CSV or JSON form, so the project has utilised those gems as well). A user can enter their in-game-name and it will extract data from the hiscores and sort it into usable data for calculations and bragging-rights. The calculations require two things; a copy of a users hiscore data (which will validate before you can continue to the calculators) and a folder in your current working directory labeled 'calc_data' that contains a list of skill data in a CSV format. If you don't have the 'calc_data' directory or each skill in the array **@available_calcs** listed in **skill_calcs.rb** CSV file it will pull it from the master branch of this repository. You are able to customize the CSV files to include training methods that my be unpopular (E.g Anchovy Pizzas, Lava Eels, Bread, etc), due to these files only including popular training methods to cut down on terminal spam. OSRS Buddy also utilises the I/O functionallity of Ruby by offering a 'notebook', where you can record/save/delete notes or goals directly to your local machine!
 
 ### Usage
 
@@ -48,7 +48,7 @@ A moral implication may arise when using the Buddy due to users wanting to reach
 For example if a user of the Buddy calculated they needed to fish 13004 to get to their desired Skill Level of 80 and proceeded not to leave their computer for 12 hours.
 
 ### Why we did what we did
-As both colloaborators of this project have been heavy Old School RuneScape players at one point or another during their lives this idea for a terminal app seemed more appropriate by the second while brainstorming ideas.
+As both colloaborators of this project have been heavy Old School RuneScape players at one point or another during their lives this idea for a terminal app seemed more appropriate by the second while brainstorming ideas. 
 
 
 ## README explains the higher level structure of the app (e.g. why modules or functions were used or why separate files were utilized).<br>
@@ -57,22 +57,21 @@ README shows extensive evidence of thoughtful planning into the overall code str
 
 ### Note to Future Developers
 
-README shows outstanding evidence of how this project might be extended and worked upon by devs beyond this project
+With the vision to continue this project on we both come to the conclusion that we should plan/write our code with futureproofing in mind. Specifically in the **skill_calcs.rb** file where we've gone ahead and added redudancy for by not hard-coding additional skill calculators.
 
 ### How Everything Went
 
-Any Problems?
-did we change anything from intial goals?
+As this project was planned out thoroughly and both having quite extensive knowledge about Old School RuneScape we didn't come across any roadblocks that made us deffer our original goals. We ran into the usual teething issues regarding data-type, parse that data between modules and the most efficient way to handle redundancy. We did however decide on changing the projects name from Old School RuneScape Skill Calculator to Old School RuneScape Buddy, as our vision of this project changed from a skill calculator to a one-stop-shop for all your OSRS needs.
 
 Shows evidence of having attempted to meet the initial design specifications, or rationale as to why things changed during development.
 
 ## Line breaker ------------------------
 
-separate files were used, not only to organise the code but also to enable seamless collaboration. While working in different files we found there was less conflicts to resolve and enable a more productive work.
+Separate files were used, not only to organise the code but also to enable seamless collaboration. While working in different files we found there was less conflicts to resolve and enable a more productive work.
 
 During this project we ensured to make use of the webapp Trello, it was both of our first times using it. We found it smooth and seamless; improving both productivity and enjoyment.
 
-Github was another technology utilised to manage workflow. Initially the process seemed clunky and unintuitive. After making something like 20 commits within the first hour we saw the value of the system and have used it extentively during this project.
+Github was another technology utilised to manage workflow. Initially the process seemed clunky and unintuitive. After making our first 20 commits within the first hour we saw the value of the system and have used it extentively during this project.
 
 # Screenshots 
 
