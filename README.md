@@ -32,10 +32,6 @@ Old School RuneScape Buddy is for any individual that plays the game RuneScape. 
 ### How It Works
 The Old School RuneScape Buddy works by utilising the Net/HTTP gem which can collect data from the from RuneScape's API, then run calculations based on the data it received (Data received is parsed in either CSV or JSON form, so the project has utilised those gems as well). A user can enter their in-game-name and it will extract data from the hiscores and sort it into usable data for calculations and bragging-rights. The calculations require two things; a copy of a users hiscore data (which will validate before you can continue to the calculators) and a folder in your current working directory labeled 'calc_data' that contains a list of skill data in a CSV format. If you don't have the 'calc_data' directory or each skill in the array **@available_calcs** listed in **skill_calcs.rb** CSV file it will pull it from the master branch of this repository. You are able to customise the CSV files to include training methods that my be unpopular (E.g Anchovy Pizzas, Lava Eels, Bread, etc), due to these files only including popular training methods to cut down on terminal spam. OSRS Buddy also utilises the I/O functionality of Ruby by offering a 'notebook', where you can record/save/delete notes or goals directly to your local machine!
 
-### Usage
-
-- here we will demonstrate application in use with a few screenshots
-
 ### Please note
 
 The current version of Old School Runescape Buddy is capable of downloading a user's hiscore data which is freely accessible to anyone via the hiscore web page (https://secure.runescape.com/m=hiscore_oldschool/overall.ws). OSRS Buddy doesn't send or store the data it retrieves for you and will be disposed of after exiting the terminal application. It does however have the ability to add/delete notes, which are stored locally on your machine. There's an option to delete this only instance of the file within the application or manually by deleting **notebook.txt** out of the current working directory of where you ran this script.<br>
