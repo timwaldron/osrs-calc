@@ -1,7 +1,8 @@
-require './osrs_api_wrapper'
 require_relative './skill_calcs'
-require 'awesome_print'
+require './osrs_api_wrapper'
+require "./todo"
 require 'tty-spinner'
+require 'awesome_print'
 
 class Main
     include SkillCalcs
@@ -16,17 +17,17 @@ class Main
 
   def login
     while true
-        pls_or_sorry_pls_string = "Please" # If they enter a username not on the OSRS hiscores
+      pls_or_sorry_pls_string = "Please" # If they enter a username not on the OSRS hiscores
       while @player_data == false
         puts `clear`
         puts "       Welcome to the" # Below looks mangled, but because it uses the escape sequence I had to replace every '\' with '\\'
-        puts " ____                   ____                         "     
-        puts "|  _ \\ _   _ _ __   ___/ ___|  ___ __ _ _ __   ___   "      
-        puts "| |_) | | | | '_ \\ / _ \\___ \\ / __/ _` | '_ \\ / _ \\  "      
-        puts "|  _ <| |_| | | | |  __/___) | (_| (_| | |_) |  __/  "      
-        puts "|_| \\_\\\\__,_|_| |_|\\___|____/ \\___\\__,_| .__/ \\___|  "     
-        puts "                                       |_|           "    
-        puts ""  
+        puts " ____                   ____                         "
+        puts "|  _ \\ _   _ _ __   ___/ ___|  ___ __ _ _ __   ___   "
+        puts "| |_) | | | | '_ \\ / _ \\___ \\ / __/ _` | '_ \\ / _ \\  "
+        puts "|  _ <| |_| | | | |  __/___) | (_| (_| | |_) |  __/  "
+        puts "|_| \\_\\\\__,_|_| |_|\\___|____/ \\___\\__,_| .__/ \\___|  "
+        puts "                                       |_|           "
+        puts ""
         puts "   S  K  I  L  L      C  A  L  C  U  L  A  T  O  R"
         puts ""
         print "#{pls_or_sorry_pls_string} enter a valid username (or '!exit' to quit): "
@@ -34,7 +35,7 @@ class Main
         @username = gets.strip.downcase
 
         if (@username == "!exit")
-            exit!
+          exit!
         end
 
         spinner = TTY::Spinner.new("[:spinner] Checking if #{@username} exists... ", format: :classic)
@@ -43,7 +44,7 @@ class Main
         spinner.stop('Done!') # Stop animation
 
         if (@player_data == false) # If it player data returns false it wasn't sucessful.
-            pls_or_sorry_pls_string = "Sorry,"
+          pls_or_sorry_pls_string = "Sorry,"
         end
       end
       menu
@@ -58,7 +59,8 @@ class Main
       puts "Welcome ~~~#{@username}~~~"
       puts "View your Skills - Press 1"
       puts "Skill Calculator - Press 2"
-      puts "Return to login screen - Press 3"
+      puts "Note Taking App  - Press 3"
+      puts "Return to login screen - Press 4"
       loop_logic(gets.strip.to_i)
     end
   end
@@ -70,6 +72,9 @@ class Main
     when 2
       skill_calculator
     when 3
+      list = Todolist.new(@username)
+      list.todo_app
+    when 4
       @player_data = false
     end
   end

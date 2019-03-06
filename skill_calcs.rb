@@ -4,6 +4,7 @@ require 'tty-spinner'
 require 'csv'
 
 module SkillCalcs
+  
     CALC_DATA_DIRECTORY = "calc_data/"
     CALC_DATA_RAW_URL = "https://raw.githubusercontent.com/timwaldron/osrs-calc/master/"
     LEVEL_DATA = "levels" # Unshifted onto the front of '@available_calcs' variable.
