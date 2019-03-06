@@ -17,8 +17,12 @@ module SkillCalcs
     # But this may limit someone who clones the repo from creating their own skill data
     @available_calcs = ["cooking", "firemaking", "fishing", "woodcutting"]
 
-    # @player_data is used throughout this project to store a hashed copy of the user's hiscore data that's easily readable
+    # @player_data is common variable name used throughout this project to store a hashed copy of
+    # the user's hiscore data that's easily readable
     @player_data = false
+
+    # Enable this to variable by setting it to true so you can test functions
+    @testing_mode = false
 
     # Simple function to convert a string to have a capital letter, E.G: "cooking"->"Cooking"
     def self.capitalize_string(string)
@@ -190,12 +194,17 @@ module SkillCalcs
 
             # Only show the items that the player has the level requirement for
             if (item_data["level"].to_i <= skill_level)
-                amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-                puts("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
-                # item_cost = OSRS_Api_Wrapper::get_item_price(item_data["item_id"].to_i)
-                # puts("| Estimaged GP: #{self.add_commas(item_cost * amount_of_actions)}")
-            end
 
+                if (@testing_mode == true)
+                    amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
+                    item_cost = OSRS_Api_Wrapper::get_item_price(item_data["item_id"].to_i)
+                    print("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
+                    puts("| Estimaged GP: #{self.add_commas(item_cost * amount_of_actions)}")
+                else
+                    amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
+                    puts("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
+                end
+            end
         end
 
         puts("")

@@ -3,12 +3,13 @@ require 'csv'
 require 'json'
 
 module OSRS_Api_Wrapper
-    # Downloads, evaluates then returns API data (Grand Exchange/Hiscore)
+    # Downloads, evaluates then returns API data (Grand Exchange/Hiscores)
     
     @hiscore_base_url = "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player="
     @grandexchange_base_url = "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item="
 
-    def self.is_http_response_valid?(url_to_check) # Check the HTTP Response of an URL (2xx OK, anything else probably not ok)
+    # Check the HTTP Response of an URL (2xx OK, anything else probably not ok)
+    def self.is_http_response_valid?(url_to_check) 
         url_response = Net::HTTP.get_response(URI(url_to_check)) # Request HTTP response from web page (Parsing URL through the URI class)
         if (url_response.code[0] == "2") # Any HTTP Response that's 2xx is classed as HTTPOK/SUCCESS
             return true # Return 'true', because getting a valid response from that page was a success!
