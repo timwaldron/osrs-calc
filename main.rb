@@ -56,15 +56,16 @@ class Main
 
   def menu
     while @player_data != false
-      puts `clear`
+      print `clear`
       ascii_splash
-      puts "--------- Welcome ------------------------"
-      puts "---#{@username}--- "
-      puts
-      puts "View your Skills - Press 1"
-      puts "Skill Calculator - Press 2"
-      puts "Notebook         - Press 3"
-      puts "Return to login screen - Press 4"
+      puts "------ Welcome #{@username} ------------"
+      puts ""
+      puts "1: View your skills"
+      puts "2: Skill Calculator"
+      puts "3: Notebook"
+      puts "4: Log out of #{@username}"
+      puts ""
+      print "Option: "
       loop_logic(gets.strip.to_i)
     end
   end
@@ -83,24 +84,15 @@ class Main
     end
   end
 
-  #   def display_skills
-  #     puts "Skills:   ~~~~~~~~~~~~~#{@username}~~~~~~~~~~~~~"
-  #     @player_data.each do |skill_data|
-  #       ap skill_data, :indent => -2, :multiline => false
-  #     end
-  #     puts "Enter enter to return to the menu"
-  #     gets.strip.downcase
-  #   end
-
   def display_skills
-    puts `clear`
-    puts "Skills: #{@username} -------------------------------"
+    print `clear`
+    puts "Skills: #{@username} -----------------------------"
     puts
     @player_data.each do |key, value|
       puts " #{key}:  #{value}"
     end
     puts "--------------------------------------------------"
-    puts "Enter enter to return to the menu"
+    print "Press enter to return to the menu"
     gets.strip.downcase
   end
 

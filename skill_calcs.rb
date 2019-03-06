@@ -94,10 +94,10 @@ module SkillCalcs
             puts("")
 
             if (directories_created > 0)
-                puts("Created #{directories_created} directories")
+                puts("Created #{directories_created} director#{'y' if directories_created == 1}#{'ies' if directories_created > 1}")
             end
 
-            puts("Downloaded #{files_downloaded} files in #{total_seconds} seconds")
+            puts("Downloaded #{files_downloaded} file#{'s' if files_downloaded != 1} in #{total_seconds} seconds")
             print("Press enter to continue...")
             gets()
         end
@@ -152,6 +152,7 @@ module SkillCalcs
         puts("Experience: #{self.add_commas(skill_experience)}")
         puts("")
 
+        # If the player already has the skill level 99 then we can't calculate the next level
         if (skill_level == 99)
             puts("Very nice level 99 #{self.capitalize_string(skill_name_as_string)}")
             puts("But unfortunately we can't calculate a maxed skill")
@@ -161,27 +162,40 @@ module SkillCalcs
             return nil
         end
 
+        # Ask the user for input regarding their desired level
         print("Please enter your desired level (#{skill_level + 1}-99): ")
         desired_level = gets().strip
 
+        # If the user's input is invalid
         while (desired_level.to_i <= skill_level.to_i || desired_level.to_i > 99)
-            print("Please enter your desired level (#{skill_level + 1}-99): ")
+            print("Please enter a CORRECT desired level (#{skill_level + 1}-99): ")
             desired_level = gets().strip
         end
 
+        # Calculates and stores in a variable the XP required of their desired level
         xp_of_desired_level = self.calculate_experience_gap(skill_experience, desired_level.to_i)
+
+        # Calculates and stores in a variable the difference between their current XP  and desired level XP
         xp_to_desired_level = xp_of_desired_level - skill_experience
+
+        # Call's what action they'll be doing depending on their skill: 'chop' wood, 'catch' fish, 'burn' logs
         action_type = self.get_action_type(skill_name_as_string)
-        # self.display_actions_til_level(xp_to_desired_level, skill_calc_item_hash, self.get_action_type(skill_name_as_string))
 
         print(`clear`)
-        puts("To level #{self.capitalize_string(skill_name_as_string)} from #{skill_level} (#{self.add_commas(skill_experience)} xp) to #{desired_level} (#{self.add_commas(xp_of_desired_level)} xp) you will need to #{action_type}")
+        puts("To get from level #{skill_level} #{self.capitalize_string(skill_name_as_string)} (#{self.add_commas(skill_experience)} xp) to #{desired_level} (#{self.add_commas(xp_of_desired_level)} xp) you will need to #{action_type}")
         puts("")
 
-        skill_calc_item_hash.each do |key, item_data| # We ca
+        # Cycle through all the rows in the CSV file that we loaded into a variable
+        skill_calc_item_hash.each do |key, item_data|
+
+            # Only show the items that the player has the level requirement for
             if (item_data["level"].to_i <= skill_level)
-                puts("#{self.add_commas(xp_to_desired_level / item_data["experience"].to_i)} x #{item_data["item"]}")
+                amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
+                puts("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
+                # item_cost = OSRS_Api_Wrapper::get_item_price(item_data["item_id"].to_i)
+                # puts("| Estimaged GP: #{self.add_commas(item_cost * amount_of_actions)}")
             end
+
         end
 
         puts("")
@@ -189,15 +203,17 @@ module SkillCalcs
         gets()
     end
 
-    def self.add_commas(add_commas_to_string) # Simple string to
-        comma_string = add_commas_to_string.to_s # make sure it's a string
-        comma_string.reverse.scan(/\d{3}|.+/).join(',').reverse
+    # Function to take a string of numbers make it neat/readable: 10000000 -> 10,000,000
+    def self.add_commas(add_commas_to_string) 
+        comma_string = add_commas_to_string.to_s
+        return comma_string.reverse.scan(/\d{3}|.+/).join(',').reverse
     end
 
+    # Method takes a skill name as a string as an argument and returns a strong of the type of action associated with it
     def self.get_action_type(skill_name)
-        case skill_name
-        when "woodcutting"
-            return "chop"
+        case skill_name.downcase
+        when "woodcutting" # With the Woodcutting skill you chop logs
+            return "chop"  # E.g You need to 'chop' 10,000 x Willow Logs to get to level x
         when "cooking"
             return "cook"
         when "fishing"
@@ -205,12 +221,16 @@ module SkillCalcs
         when "firemaking"
             return "burn"
         else
-            return "do"
+            return "do" # Do fish, do cakes, do ores.
         end
     end
 
+    # simple function to get the total XP of a level 
     def self.calculate_experience_gap(starting_experience, desired_level)
+        # Using the IO class to read a specific line from our csv file
         line_data = IO.readlines(CALC_DATA_DIRECTORY + LEVEL_DATA + ".csv")[desired_level - 1]
+
+        # It has two columns, first one being level, second one being total xp
         level_data = line_data.split(",")
         return level_data[1].to_i
     end

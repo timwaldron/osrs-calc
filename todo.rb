@@ -19,6 +19,8 @@ class Todolist
       puts "enter '3': delete note"
       puts "enter '4': clear notes"
       puts "enter '5': to quit"
+      puts
+      print "Option: "
       loop_logic(gets.strip.to_i) # converting to integar for use in loop_logic
     end
   end
@@ -44,9 +46,13 @@ class Todolist
     puts `clear`
     puts "----------- add note -------------"
     puts "!exit to quit"
+    puts ""
+    print "Note: "
     user_note = gets.chomp
     while user_note != "!exit"
       @notebook << user_note # pushing the user note into the notebook
+
+      print "Note: "
       user_note = gets.chomp
     end
     write_file
@@ -64,15 +70,15 @@ class Todolist
   def print_todos
     i = 1 # counter intiated for counter
     puts `clear`
+    puts "Last entry on: #{File.atime("notebook.txt")}"
     puts "-------- Notes for #{@username} ---------"
     File.open("notebook.txt", "r") do |f|
-      f.each_line do |line| # prints out each line of the file with inde
+      f.each_line do |line| # prints out each line of the file with index
         puts "#{i}: #{line}"
         i += 1
       end
     end
-    puts "----------------------------------------> #{File.atime("notebook.txt")}"
-    puts "press enter to exit"
+    print "Press enter to return"
     gets
   end
 
