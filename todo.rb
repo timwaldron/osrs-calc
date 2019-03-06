@@ -1,105 +1,89 @@
 
 class Todolist
-  attr_accessor :todo_list
+  attr_accessor :notebook
 
   def initialize(name)
-    @username = name
-    @todo_list = []
+    @username = name # @username is passed as todolist is initialized for specific user
+    @notebook = []
     @choice = ""
   end
 
   def todo_app
-    until @choice == 6
+    until @choice == 5 # until loop is used to avoid using !=
       puts `clear`
-      puts "------- A Todo List For #{@username} ---------"
-      puts "Would you like to-do?"
-      puts "enter '1': add todo"
-      puts "enter '2': complete todo"
-      puts "enter '3': print todos"
-      puts "enter '4': delete todo"
-      puts "enter '5': clear todos"
-      puts "enter '6': to quit"
-      loop_logic(gets.strip.to_i)
+      puts "------- A Notebook For #{@username} ---------"
+      puts "---- Options ----"
+      puts
+      puts "enter '1': add note"
+      puts "enter '2': print notes"
+      puts "enter '3': delete note"
+      puts "enter '4': clear notes"
+      puts "enter '5': to quit"
+      loop_logic(gets.strip.to_i) # converting to integar for use in loop_logic
     end
   end
 
-  def loop_logic(choice)
+  def loop_logic(choice) # same loop as main using case statements was implemented
     case choice
     when 1
       add_todo
     when 2
-      checkoff_todos
-    when 3
       print_todos
-    when 4
+    when 3
       delete_todo
-    when 5
+    when 4
       clear_todos
-    when 6
+    when 5
       write_file
-      @choice = 6
+      @choice = 5
       return nil
     end
   end
 
   def add_todo
     puts `clear`
-    puts "----------- add todo -------------"
+    puts "----------- add note -------------"
     puts "!exit to quit"
-    # until input == "!exit"
-    #   if input != "!exit"
-    #     input = gets.chomp
-    #     @todo_list << input
-    #   end
-    # end
-    input = gets.chomp
-    while input != "!exit"
-      @todo_list << input
-      input = gets.chomp
+    user_note = gets.chomp
+    while user_note != "!exit"
+      @notebook << user_note # pushing the user note into the notebook
+      user_note = gets.chomp
     end
     write_file
   end
 
   def delete_todo
     puts `clear`
-    puts "------- enter todo number --------"
-    input = gets.chomp
-    @todo_list.delete_at(input.to_i - 1)
+    puts "------- enter note number --------"
+    input = gets.chomp # .chomp is used because i like the way it sounds
+    @notebook.delete_at(input.to_i - 1) # -1 is used due to index being off by 1
     puts "press enter to exit"
     write_file
   end
 
   def print_todos
-    i = 1
+    i = 1 # counter intiated for counter
     puts `clear`
-    puts "-------- TODO LIST for #{@username} ---------"
-    File.open("todo_list.txt", "r") do |f|
-      f.each_line do |line|
+    puts "-------- Notes for #{@username} ---------"
+    File.open("notebook.txt", "r") do |f|
+      f.each_line do |line| # prints out each line of the file with inde
         puts "#{i}: #{line}"
         i += 1
       end
     end
-    puts "----------------------------------------> #{File.atime("todo_list.txt")}"
+    puts "----------------------------------------> #{File.atime("notebook.txt")}"
     puts "press enter to exit"
     gets
   end
 
   def write_file
-    open("todo_list.txt", "w") { |f|
-      f.puts @todo_list
+    open("notebook.txt", "w") { |f|
+      f.puts @notebook
     }
   end
 
   def clear_todos
-    @todo_list = []
+    @notebook = []
     write_file
-  end
-
-  def checkoff_todos
-    puts `clear`
-    puts "------- enter todo number --------"
-    input = gets.chomp
-    @todo_list[input.to_i - 1] + "  *"
-    puts "press enter to exit"
   end
 end
