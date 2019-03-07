@@ -2,6 +2,7 @@ require './osrs_api_wrapper'
 require 'net/http'
 require 'tty-spinner'
 require 'csv'
+require './prettifier'
 
 module SkillCalcs
      # Folder of the current working directory, future plan is to roll this out as ~/.calc_data/
@@ -15,7 +16,7 @@ module SkillCalcs
 
     # Available calculators, future plan is to have this list potentially in GitHub so we can determine what calcs are avalable.
     # But this may limit someone who clones the repo from creating their own skill data
-    @available_calcs = ["cooking", "firemaking", "fishing", "woodcutting"]
+    @available_calcs = ["cooking", "firemaking", "fishing", "woodcutting", "ranged"]
 
     # @player_data is common variable name used throughout this project to store a hashed copy of
     # the user's hiscore data that's easily readable
@@ -154,18 +155,25 @@ module SkillCalcs
         puts("")
         puts("     Level: #{skill_level}")
         puts("Experience: #{self.add_commas(skill_experience)}")
-        puts("")
 
         # If the player already has the skill level 99 then we can't calculate the next level
         if (skill_level == 99)
+            puts("")
+            puts("   % to 99: #{Prettifier.progress_bar(100)}")
+            puts("")
             puts("Very nice level 99 #{self.capitalize_string(skill_name_as_string)}")
             puts("But unfortunately we can't calculate a maxed skill")
             puts("")
-            puts("Press enter to return...")
+            print("Press enter to return...")
             gets()
             return nil
+        else
+            puts("")
+            puts("   % to #{skill_level + 1}: #{Prettifier.progress_bar(((skill_experience * 100).to_f / self.calculate_experience_gap(skill_experience, skill_level + 1)).to_i)}") # 13034431 is level 99
+            puts("   % to 99: #{Prettifier.progress_bar(((skill_experience * 100).to_f / 13034431).to_i)}") # 13034431 is level 99
         end
 
+        puts("")
         # Ask the user for input regarding their desired level
         print("Please enter your desired level (#{skill_level + 1}-99): ")
         desired_level = gets().strip
