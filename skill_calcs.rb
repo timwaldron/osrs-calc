@@ -1,10 +1,12 @@
 require './osrs_api_wrapper'
+require './prettifier'
+require './async_web_responses'
 require 'net/http'
 require 'tty-spinner'
 require 'csv'
-require './prettifier'
 
 module SkillCalcs
+    include Async_Web_Responses
      # Folder of the current working directory, future plan is to roll this out as ~/.calc_data/
     CALC_DATA_DIRECTORY = "calc_data/"
 
@@ -16,14 +18,15 @@ module SkillCalcs
 
     # Available calculators, future plan is to have this list potentially in GitHub so we can determine what calcs are avalable.
     # But this may limit someone who clones the repo from creating their own skill data
-    @available_calcs = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction"]
+    #@available_calcs = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction"]
+    @available_calcs = ["cooking", "firemaking", "fishing", "ranged", "woodcutting"]
 
     # @player_data is common variable name used throughout this project to store a hashed copy of
     # the user's hiscore data that's easily readable
     @player_data = false
 
     # Enable this to variable by setting it to true so you can test functions
-    @testing_mode = false
+    @testing_mode = true
 
     # Function to check if all the files that are utilised by this program are where they should be.
     def self.check_calc_data_files()
@@ -54,6 +57,8 @@ module SkillCalcs
         # Even though it's not a calc file it's still needed, so we'll temporarily wack it onto the front of the array
         @available_calcs.unshift(LEVEL_DATA)
 
+        # Stores the temporary responses of web requess
+        temp_responses = {}
         # Run through the available calculators array
         @available_calcs.each do |skill_data_file_name|
 
@@ -103,7 +108,7 @@ module SkillCalcs
         end
 
         # Remove the LEVEL DATA string out of the @available_calcs array of strings, like mentioned it's utilised in other functions
-        @available_calcs = @available_calcs.delete(LEVEL_DATA)
+        @available_calcs.delete(LEVEL_DATA)
     end
 
     def self.get_available_calcs()
@@ -135,8 +140,8 @@ module SkillCalcs
 
         # Empty hash for storing our player data to pull data from
         skill_calc_item_hash = {} 
-        
         # Run through each row of CSV data we've read into a variable
+        
         skill_calc_data.each_with_index do |row, index|
             # Create a new variable and set it to the value of the row variable when coerced into a hash
             row_data = row.to_hash
@@ -192,23 +197,47 @@ module SkillCalcs
         puts("To get from level #{skill_level} #{Prettifier::capitalize_string(skill_name_as_string)} (#{Prettifier::add_commas(skill_experience)} xp) to #{desired_level} (#{Prettifier::add_commas(xp_of_desired_level)} xp) you will need to #{action_type}")
         puts("")
 
-        # Cycle through all the rows in the CSV file that we loaded into a variable
+        
+        array_of_item_ids = []
+
         skill_calc_item_hash.each do |key, item_data|
+            array_of_item_ids << item_data["item_id"]
+        end
 
-            # Only show the items that the player has the level requirement for
-            if (item_data["level"].to_i <= skill_level)
-
-                if (@testing_mode == true)
-                    amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-                    item_cost = OSRS_Api_Wrapper::get_item_price(item_data["item_id"].to_i)
-                    print("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
-                    puts("| Estimaged GP: #{Prettifier::add_commas(item_cost * amount_of_actions)}")
+        item_cost = Async_Web_Responses::get_item_ge_data(array_of_item_ids)
+        puts("")
+        
+        item_cost.each_with_index do |hash, index|
+            hash.each do |status, body_hash|
+                puts("#{}")
+                if (status != "200")
+                    puts("HTTP STATUS CODE NOT 200")
                 else
-                    amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-                    puts("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
+                    puts("#{body_hash["item"]["name"]}: #{body_hash["item"]["current"]["price"]} GP")
                 end
             end
         end
+
+        puts("")
+
+        # Cycle through all the rows in the CSV file that we loaded into a variable
+        #     # Only show the items that the player has the level requirement for
+        #     if (item_data["level"].to_i <= skill_level)
+
+        #         if (@testing_mode == true)
+        #             amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
+        #             item_cost = Async_Web_Responses::get_item_ge_data(item_data["item_id"])
+
+        #             puts("#{item_cost}")
+                    
+        #             # print("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
+        #             # puts("| Estimaged GP: #{Prettifier::add_commas(item_cost * amount_of_actions)}")
+        #         else
+        #             amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
+        #             puts("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
+        #         end
+        #     end
+        # end
 
         puts("")
         print("Press enter to continue...")
@@ -237,7 +266,7 @@ module SkillCalcs
         line_data = IO.readlines(CALC_DATA_DIRECTORY + LEVEL_DATA + ".csv")[desired_level - 1]
 
         # It has two columns, first one being level, second one being total xp
-        level_data = line_data.split(",")
-        return level_data[1].to_i
+        column_data = line_data.split(",")
+        return column_data[1].to_i
     end
 end

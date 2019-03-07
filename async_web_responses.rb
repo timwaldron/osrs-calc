@@ -1,46 +1,45 @@
 require 'net/http'
-require 'concurrent'
 require 'typhoeus'
 
-class Async_Web_Responses
-    include Concurrent::Async
+module Async_Web_Responses
 
-    def get_http_response(url_to_get_response)
-        response = Net::HTTP.get_response(URI(url_to_get_response))
-        return response.code
+    def self.get_item_ge_data(array_of_item_ids_as_strings)
+        grand_exchange_base_url = 'http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item='
+        response_data = [] # Array of hashes
+        puts("Starting Requests: ")
+        start_time = Time.now
+        number_of_requests = array_of_item_ids_as_strings.length
+        request_id = 0
+        
+        hydra = Typhoeus::Hydra.new
+        number_of_requests.times do
+          request = Typhoeus::Request.new(grand_exchange_base_url + array_of_item_ids_as_strings[request_id], followlocation: true)
+          request.on_complete do |response|
+
+            case response.code
+            when 200..299
+                body_data = JSON.parse(response.body)
+            else
+                body_data = "Check status code"
+            end
+
+            response_data[request_id] = {status: response.code.to_s, body: body_data}
+            request_id += 1
+          end
+          hydra.queue(request)
+        end
+        hydra.run
+        
+        end_time = Time.now
+        puts("Received #{number_of_requests} responses in #{end_time - start_time} seconds")
+        return response_data
     end
 end
 
-test_class = Async_Web_Responses.new()
-grand_exchange_base_url = 'http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item='
+# include Async_Web_Responses
 
-
-
-puts("Starting Requests: ")
-start_time = Time.now
-number_of_requests = 25
-item_sample = ["1511", "1521", "1519", "6333", "1517", "6332", "1515", "1513", "19669"]
-
-hydra = Typhoeus::Hydra.new
-number_of_requests.times do
-  request = Typhoeus::Request.new(grand_exchange_base_url + item_sample.sample, followlocation: true)
-  request.on_complete do |response|
-    puts("")
-    puts("Response Code: #{response.code}")
-    puts("Response Body: #{response.body}")
-    puts("")
-  end
-  hydra.queue(request)
-end
-hydra.run
-
-end_time = Time.now
-
-puts("")
-puts("Done!")
-puts("Got #{number_of_requests} responses in #{end_time - start_time} seconds")
-sleep
-
+# my_data = Async_Web_Responses.get_http_response("null")
+# binding.pry
 
 # for i in 0...requests do
 

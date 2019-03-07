@@ -1,8 +1,9 @@
-require_relative "./skill_calcs"
+require "./skill_calcs"
 require "./osrs_api_wrapper"
 require "./todo"
 require "tty-spinner"
 require "awesome_print"
+
 
 class Main
   include SkillCalcs
@@ -163,7 +164,6 @@ class Main
         
         calcs_available = SkillCalcs::get_available_calcs()
         calcs_available.each_with_index do |skill_name, index|
-
             puts("#{index + 1}: #{Prettifier::capitalize_string(skill_name)}")
         end
 

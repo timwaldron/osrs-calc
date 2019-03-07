@@ -1,10 +1,8 @@
 require 'net/http'
 require 'csv'
 require 'json'
-require 'concurrent'
 
 module OSRS_Api_Wrapper
-  include Concurrent::Async
   # Downloads, evaluates then returns API data (Grand Exchange/Hiscores)
   @hiscore_base_url = 'https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player='
   @grandexchange_base_url = 'http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item='
