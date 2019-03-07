@@ -1,12 +1,11 @@
-# frozen_string_literal: true
-
 require 'net/http'
 require 'csv'
 require 'json'
+require 'concurrent'
 
 module OSRS_Api_Wrapper
+  include Concurrent::Async
   # Downloads, evaluates then returns API data (Grand Exchange/Hiscores)
-
   @hiscore_base_url = 'https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player='
   @grandexchange_base_url = 'http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item='
 
@@ -68,7 +67,7 @@ module OSRS_Api_Wrapper
 
   def self.download_hiscore_data(hiscore_url) # Download players hiscore data
     # Due to the dirty way you receive data from the hiscore API, I've manually had to map out the order of hiscore skill/minigame that the URL gives you and stored it in 'raw_hiscore_order', so then we can line those elements up as hash names
-    raw_hiscore_order = %w[overall attack defence strength hitpoints ranged prayer magic cooking woodcutting fletching fishing firemaking crafting smithing mining herblore agility thieving slayer farming runecrafting hunter construction bounty_hunter bounty_hunter_rogues clue_scrolls_all clue_scrolls_easy clue_scrolls_medium clue_scrolls_hard clue_scrolls_elite clue_scrolls_master lms]
+    raw_hiscore_order = ["overall", "attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction", "bounty_hunter", "bounty_hunter_rogues", "clue_scrolls_all", "clue_scrolls_easy", "clue_scrolls_medium", "clue_scrolls_hard", "clue_scrolls_elite", "clue_scrolls_master", "lms"]
     raw_hiscore_data = "rank,level,experience\n" # Sets the 'raw_hiscore_data' up with pre-definied headers
     raw_hiscore_data += Net::HTTP.get(URI(hiscore_url)) # Grab the data from the hiscore_url
     hashed_hiscore_data = CSV.parse(raw_hiscore_data, headers: true) # parse our raw data into a variable with the headers flag/arguement set to true

@@ -114,7 +114,12 @@ class Main
                         next
                     end
 
-                    skill_percentage = ((temp_entry_hash["experience"].to_i * 100).to_f / 13034431).to_i
+                    if (temp_entry_hash["level"].to_i == 99)
+                        skill_percentage = 100
+                    else
+                        skill_percentage = ((temp_entry_hash["experience"].to_i * 100).to_f / 13034431).to_i
+                    end
+
                     overall_maxed << skill_percentage
                 end
 
@@ -123,6 +128,7 @@ class Main
                     player_percentage += item
                 end
 
+                # percentage_to_max = ((player_percentage * 100).to_f / 2300).to_i
                 percentage_to_max = ((player_percentage * 100).to_f / 2300).to_i
                 puts "\t% to max:\t#{Prettifier.progress_bar(percentage_to_max)}" # 13034431 is level 99
             elsif (entry_hash["level"].to_i != 99)

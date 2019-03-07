@@ -16,7 +16,7 @@ module SkillCalcs
 
     # Available calculators, future plan is to have this list potentially in GitHub so we can determine what calcs are avalable.
     # But this may limit someone who clones the repo from creating their own skill data
-    @available_calcs = ["cooking", "firemaking", "fishing", "woodcutting", "ranged"]
+    @available_calcs = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction"]
 
     # @player_data is common variable name used throughout this project to store a hashed copy of
     # the user's hiscore data that's easily readable
@@ -74,7 +74,7 @@ module SkillCalcs
                     files_downloaded += 1
                 else
                     # Remove the 404'd skill as other modules/files piggy-back off the @available_calcs variable
-                    @available_calcs.delete(skill_data_file_name) 
+                    @available_calcs = @available_calcs.delete(skill_data_file_name) 
                     puts("file not found! (HTTP 404)")
                 end
 
@@ -103,7 +103,7 @@ module SkillCalcs
         end
 
         # Remove the LEVEL DATA string out of the @available_calcs array of strings, like mentioned it's utilised in other functions
-        @available_calcs.delete(LEVEL_DATA)
+        @available_calcs = @available_calcs.delete(LEVEL_DATA)
     end
 
     def self.get_available_calcs()
