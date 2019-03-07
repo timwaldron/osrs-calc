@@ -121,6 +121,19 @@ module Prettifier
   def self.pad_string(string)
     return " " + string
   end
+
+  # Simple function to convert a string to have a capital letter, E.G: "cooking"->"Cooking"
+  def self.capitalize_string(string)
+    return string[0].upcase + string[1...string.length]
+  end
+
+  # Function to take a string of numbers make it neat/readable: 10000000 -> 10,000,000
+  def self.add_commas(add_commas_to_string) 
+    comma_string = add_commas_to_string.to_s
+    return comma_string.reverse.scan(/\d{3}|.+/).join(',').reverse
+  end
+
+
 end
 
 # for index in 0..100 do

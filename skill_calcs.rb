@@ -25,11 +25,6 @@ module SkillCalcs
     # Enable this to variable by setting it to true so you can test functions
     @testing_mode = false
 
-    # Simple function to convert a string to have a capital letter, E.G: "cooking"->"Cooking"
-    def self.capitalize_string(string)
-        return string[0].upcase + string[1...string.length]
-    end
-
     # Function to check if all the files that are utilised by this program are where they should be.
     def self.check_calc_data_files()
         puts(`clear`)
@@ -151,17 +146,17 @@ module SkillCalcs
         end
 
         print(`clear`)
-        puts("~~~~~ #{self.capitalize_string(skill_name_as_string)} Calculator ~~~~~")
+        puts("~~~~~ #{Prettifier::capitalize_string(skill_name_as_string)} Calculator ~~~~~")
         puts("")
-        puts("     Level: #{skill_level}")
-        puts("Experience: #{self.add_commas(skill_experience)}")
+        puts("     Level:\t#{skill_level}")
+        puts("Experience:\t#{Prettifier::add_commas(skill_experience)}")
 
         # If the player already has the skill level 99 then we can't calculate the next level
         if (skill_level == 99)
             puts("")
-            puts("   % to 99: #{Prettifier.progress_bar(100)}")
+            puts("   % to 99:\t#{Prettifier.progress_bar(100)}")
             puts("")
-            puts("Very nice level 99 #{self.capitalize_string(skill_name_as_string)}")
+            puts("Very nice level 99 #{Prettifier::capitalize_string(skill_name_as_string)}")
             puts("But unfortunately we can't calculate a maxed skill")
             puts("")
             print("Press enter to return...")
@@ -169,8 +164,8 @@ module SkillCalcs
             return nil
         else
             puts("")
-            puts("   % to #{skill_level + 1}: #{Prettifier.progress_bar(((skill_experience * 100).to_f / self.calculate_experience_gap(skill_experience, skill_level + 1)).to_i)}") # 13034431 is level 99
-            puts("   % to 99: #{Prettifier.progress_bar(((skill_experience * 100).to_f / 13034431).to_i)}") # 13034431 is level 99
+            puts("   % to #{skill_level + 1}:\t#{Prettifier.progress_bar(((skill_experience * 100).to_f / self.calculate_experience_gap(skill_experience, skill_level + 1)).to_i)}") # 13034431 is level 99
+            puts("   % to 99:\t#{Prettifier.progress_bar(((skill_experience * 100).to_f / 13034431).to_i)}") # 13034431 is level 99
         end
 
         puts("")
@@ -194,7 +189,7 @@ module SkillCalcs
         action_type = self.get_action_type(skill_name_as_string)
 
         print(`clear`)
-        puts("To get from level #{skill_level} #{self.capitalize_string(skill_name_as_string)} (#{self.add_commas(skill_experience)} xp) to #{desired_level} (#{self.add_commas(xp_of_desired_level)} xp) you will need to #{action_type}")
+        puts("To get from level #{skill_level} #{Prettifier::capitalize_string(skill_name_as_string)} (#{Prettifier::add_commas(skill_experience)} xp) to #{desired_level} (#{Prettifier::add_commas(xp_of_desired_level)} xp) you will need to #{action_type}")
         puts("")
 
         # Cycle through all the rows in the CSV file that we loaded into a variable
@@ -206,11 +201,11 @@ module SkillCalcs
                 if (@testing_mode == true)
                     amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
                     item_cost = OSRS_Api_Wrapper::get_item_price(item_data["item_id"].to_i)
-                    print("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
-                    puts("| Estimaged GP: #{self.add_commas(item_cost * amount_of_actions)}")
+                    print("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
+                    puts("| Estimaged GP: #{Prettifier::add_commas(item_cost * amount_of_actions)}")
                 else
                     amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-                    puts("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
+                    puts("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
                 end
             end
         end
@@ -218,12 +213,6 @@ module SkillCalcs
         puts("")
         print("Press enter to continue...")
         gets()
-    end
-
-    # Function to take a string of numbers make it neat/readable: 10000000 -> 10,000,000
-    def self.add_commas(add_commas_to_string) 
-        comma_string = add_commas_to_string.to_s
-        return comma_string.reverse.scan(/\d{3}|.+/).join(',').reverse
     end
 
     # Method takes a skill name as a string as an argument and returns a strong of the type of action associated with it
