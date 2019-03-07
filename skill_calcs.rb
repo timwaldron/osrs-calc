@@ -4,6 +4,7 @@ require './async_web_responses'
 require 'net/http'
 require 'tty-spinner'
 require 'csv'
+require 'pry'
 
 module SkillCalcs
     include Async_Web_Responses
@@ -207,22 +208,52 @@ module SkillCalcs
         item_cost = Async_Web_Responses::get_item_ge_data(array_of_item_ids)
         puts("")
         
+        item_array = []
         item_cost.each_with_index do |hash, index|
-            hash.each do |status, body_hash|
-                puts("#{}")
-                if (status != "200")
-                    puts("HTTP STATUS CODE NOT 200")
-                else
-                    puts("#{body_hash["item"]["name"]}: #{body_hash["item"]["current"]["price"]} GP")
+
+            if (hash["status"] == 200)
+                item_price = hash["body"]["item"]["current"]["price"]
+
+                if (hash["body"]["item"]["current"]["price"].class != Integer)
+                    item_price.gsub!(",", "")
                 end
+
+                # gets()
+                # item_price = hash["body"]["item"]["current"]["price"].gsub(",", "")
+                item_array << {"item_name": hash["body"]["item"]["name"], "item_price": item_price.to_i}
             end
         end
 
-        puts("")
+        skill_calc_item_hash.each do |key, item_data|
+            puts("#{key} | #{item_data}")
+
+            if (item_data["item"] == "")
+        end
+
+        item_array.each do |item|
+            puts("#{item}")
+        end
+
+            # hash.each do |key_name, values|
+
+            #     if (key_name == "body" && values == 200)
+            #     else
+            #         puts("#{body_hash["item"]["name"]}: #{body_hash["item"]["current"]["price"]} GP")
+            #     end
+
+            #     binding.pry
+            #     # if (body_hash["status"] != 200)
+            #     #     puts("HTTP STATUS CODE NOT 200")
+            #     # else
+            #     #     puts("#{body_hash["item"]["name"]}: #{body_hash["item"]["current"]["price"]} GP")
+            #     # end
+            # end
 
         # Cycle through all the rows in the CSV file that we loaded into a variable
         #     # Only show the items that the player has the level requirement for
         #     if (item_data["level"].to_i <= skill_level)
+        #         print("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
+        #         puts("| Estimaged GP: #{Prettifier::add_commas(item_cost * amount_of_actions)}")
 
         #         if (@testing_mode == true)
         #             amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
@@ -230,8 +261,6 @@ module SkillCalcs
 
         #             puts("#{item_cost}")
                     
-        #             # print("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
-        #             # puts("| Estimaged GP: #{Prettifier::add_commas(item_cost * amount_of_actions)}")
         #         else
         #             amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
         #             puts("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
