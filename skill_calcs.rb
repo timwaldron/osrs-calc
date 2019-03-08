@@ -5,6 +5,7 @@ require 'net/http'
 require 'tty-spinner'
 require 'csv'
 require 'pry'
+require 'terminal-table'
 
 module SkillCalcs
     include Async_Web_Responses
@@ -140,7 +141,7 @@ module SkillCalcs
         skill_calc_data = CSV.parse(skill_calc_data, :headers => true) 
 
         # Empty hash for storing our player data to pull data from
-        skill_calc_item_hash = {} 
+        skill_calc_item_array = []
         # Run through each row of CSV data we've read into a variable
         
         skill_calc_data.each_with_index do |row, index|
@@ -148,7 +149,7 @@ module SkillCalcs
             row_data = row.to_hash
             
             # Create a new key in our hash
-            skill_calc_item_hash[skill_calc_data[index]] = row_data
+            skill_calc_item_array << row_data
         end
 
         print(`clear`)
@@ -192,21 +193,20 @@ module SkillCalcs
         xp_to_desired_level = xp_of_desired_level - skill_experience
 
         # Call's what action they'll be doing depending on their skill: 'chop' wood, 'catch' fish, 'burn' logs
-        action_type = self.get_action_type(skill_name_as_string)
+        action_type = self.get_skill_info(skill_name_as_string)
 
         print(`clear`)
-        puts("To get from level #{skill_level} #{Prettifier::capitalize_string(skill_name_as_string)} (#{Prettifier::add_commas(skill_experience)} xp) to #{desired_level} (#{Prettifier::add_commas(xp_of_desired_level)} xp) you will need to #{action_type}")
+        puts("To get from level #{skill_level} #{Prettifier::capitalize_string(skill_name_as_string)} (#{Prettifier::add_commas(skill_experience)} xp) to #{desired_level} (#{Prettifier::add_commas(xp_of_desired_level)} xp) you will need to #{action_type[0]}")
         puts("")
 
         
         array_of_item_ids = []
 
-        skill_calc_item_hash.each do |key, item_data|
-            array_of_item_ids << item_data["item_id"]
+        skill_calc_item_array.each do |item|
+            array_of_item_ids << item["item_id"]
         end
 
         item_cost = Async_Web_Responses::get_item_ge_data(array_of_item_ids)
-        puts("")
         
         item_array = []
         item_cost.each_with_index do |hash, index|
@@ -220,19 +220,39 @@ module SkillCalcs
 
                 # gets()
                 # item_price = hash["body"]["item"]["current"]["price"].gsub(",", "")
+                # puts("#{hash["body"]["item"]["name"]}")
                 item_array << {"item_name": hash["body"]["item"]["name"], "item_price": item_price.to_i}
             end
         end
+        
+        rows = []
+        only_show_available_items = true
 
-        skill_calc_item_hash.each do |key, item_data|
-            puts("#{key} | #{item_data}")
-
-            if (item_data["item"] == "")
+        if (only_show_available_items)
+            puts("Showing items you have the level requirement for")
         end
 
-        item_array.each do |item|
-            puts("#{item}")
+        item_array.each do |item_array_item|
+            skill_calc_item_array.each do |skill_calc_item|
+
+                if (only_show_available_items)
+                    if (item_array_item[:item_name].downcase == skill_calc_item["item"].downcase)
+                        item_cost = item_array_item[:item_price]
+                        amount_of_actions = xp_to_desired_level / skill_calc_item["experience"].to_i
+
+                        if (skill_calc_item["level"].to_i <= skill_level.to_i)
+                            rows << [Prettifier::add_commas(amount_of_actions), skill_calc_item["item"], Prettifier::add_commas(item_cost * amount_of_actions) + " GP"]
+                        end
+                    end
+                end
+            end
         end
+
+        prof_cost = get_skill_info(skill_name_as_string)
+
+        table = Terminal::Table.new :headings => ['Actions', 'Item', "Estimated #{prof_cost[1]}"], :rows => rows
+
+        puts table
 
             # hash.each do |key_name, values|
 
@@ -274,16 +294,16 @@ module SkillCalcs
     end
 
     # Method takes a skill name as a string as an argument and returns a strong of the type of action associated with it
-    def self.get_action_type(skill_name)
+    def self.get_skill_info(skill_name)
         case skill_name.downcase
         when "woodcutting" # With the Woodcutting skill you chop logs
-            return "chop"  # E.g You need to 'chop' 10,000 x Willow Logs to get to level x
+            return ["chop", "profit"]  # E.g You need to 'chop' 10,000 x Willow Logs to get to level x
         when "cooking"
-            return "cook"
+            return ["cook", "cost"]
         when "fishing"
-            return "catch"
+            return ["catch", "profit"]
         when "firemaking"
-            return "burn"
+            return ["burn", "cost"]
         else
             return "do" # Do fish, do cakes, do ores.
         end

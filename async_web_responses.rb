@@ -32,7 +32,8 @@ module Async_Web_Responses
         hydra.run
         
         end_time = Time.now
-        puts("Received #{number_of_requests} responses in #{(end_time - start_time).round(3)} seconds")
+        puts("#{number_of_requests} response#{'s' if number_of_requests != 1} in #{(end_time - start_time).round(3)} seconds")
+        puts("")
         return response_data
     end
 end

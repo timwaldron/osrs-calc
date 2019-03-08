@@ -1,10 +1,10 @@
 item,level,experience,item_id
-Normal Log,1,40,1511
-Oak Log,15,60,1521
-Willow Log,30,90,1519
-Teak Log,35,105,6333
-Maple Log,45,135,1517
-Mahogany Log,50,157,6332
-Yew Log,60,202,1515
-Magic Log,75,303,1513
-Redwood Log,90,350,19669
+Logs,1,40,1511
+Oak Logs,15,60,1521
+Willow Logs,30,90,1519
+Teak Logs,35,105,6333
+Maple Logs,45,135,1517
+Mahogany Logs,50,157,6332
+Yew Logs,60,202,1515
+Magic Logs,75,303,1513
+Redwood Logs,90,350,19669
