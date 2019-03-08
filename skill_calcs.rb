@@ -254,40 +254,6 @@ module SkillCalcs
 
         puts table
 
-            # hash.each do |key_name, values|
-
-            #     if (key_name == "body" && values == 200)
-            #     else
-            #         puts("#{body_hash["item"]["name"]}: #{body_hash["item"]["current"]["price"]} GP")
-            #     end
-
-            #     binding.pry
-            #     # if (body_hash["status"] != 200)
-            #     #     puts("HTTP STATUS CODE NOT 200")
-            #     # else
-            #     #     puts("#{body_hash["item"]["name"]}: #{body_hash["item"]["current"]["price"]} GP")
-            #     # end
-            # end
-
-        # Cycle through all the rows in the CSV file that we loaded into a variable
-        #     # Only show the items that the player has the level requirement for
-        #     if (item_data["level"].to_i <= skill_level)
-        #         print("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
-        #         puts("| Estimaged GP: #{Prettifier::add_commas(item_cost * amount_of_actions)}")
-
-        #         if (@testing_mode == true)
-        #             amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-        #             item_cost = Async_Web_Responses::get_item_ge_data(item_data["item_id"])
-
-        #             puts("#{item_cost}")
-                    
-        #         else
-        #             amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-        #             puts("#{Prettifier::add_commas(amount_of_actions)} x #{item_data["item"]}")
-        #         end
-        #     end
-        # end
-
         puts("")
         print("Press enter to continue...")
         gets()

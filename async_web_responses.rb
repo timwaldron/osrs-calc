@@ -37,27 +37,3 @@ module Async_Web_Responses
         return response_data
     end
 end
-
-# include Async_Web_Responses
-
-# my_data = Async_Web_Responses.get_http_response("null")
-# binding.pry
-
-# for i in 0...requests do
-
-#     sleep(0.01)
-    
-#     Thread.new do
-#         responses['response' + i.to_s] = test_class.get_http_response(grand_exchange_base_url + rand(1000..9000).to_s)
-#         puts "Successfully requested"
-    
-#         if responses.count == requests
-#             puts "Fetched all urls!"
-#             break
-#         end
-#     end
-# end
-
-# end_time = Time.now
-# sleep 10
-# puts (responses.count.to_s)
