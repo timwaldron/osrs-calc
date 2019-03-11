@@ -1,12 +1,12 @@
-require "./skill_calcs"
-require "./osrs_api_wrapper"
-require "./todo"
-require "tty-spinner"
-require "awesome_print"
+require './skill_calcs'
+require './osrs_api_wrapper'
+require './async_web_responses'
+require './todo'
+require 'tty-spinner'
+require 'awesome_print'
 
 
 class Main
-  include SkillCalcs
 
   def initialize()
     @username = nil
@@ -31,6 +31,7 @@ class Main
   def login
     while true
       pls_or_sorry_pls_string = "Please" # If they enter a username not on the OSRS hiscores
+      
       while @player_data == false
         print `clear`
         ascii_splash
@@ -154,7 +155,7 @@ class Main
   end
 
   def skill_calculator
-    SkillCalcs::check_calc_data_files()
+    Async_Web_Responses::check_calc_data()
     skill_option = nil
     
     while skill_option != "!exit"
