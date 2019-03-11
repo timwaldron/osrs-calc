@@ -20,8 +20,8 @@ module SkillCalcs
 
     # Available calculators, future plan is to have this list potentially in GitHub so we can determine what calcs are avalable.
     # But this may limit someone who clones the repo from creating their own skill data
-    #@available_calcs = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction"]
-    @available_calcs = ["cooking", "firemaking", "fishing", "ranged", "woodcutting"]
+    @available_calcs = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction"]
+    #@available_calcs = ["cooking", "firemaking", "fishing", "ranged", "woodcutting"]
 
     # @player_data is common variable name used throughout this project to store a hashed copy of
     # the user's hiscore data that's easily readable
@@ -60,35 +60,52 @@ module SkillCalcs
         @available_calcs.unshift(LEVEL_DATA)
 
         # Stores the temporary responses of web requess
+        files_to_pull = []
         temp_responses = {}
         # Run through the available calculators array
+        puts("Repository: #{CALC_DATA_RAW_URL}")
         @available_calcs.each do |skill_data_file_name|
 
             # Checks if the file doesn't exist in our ./calc_data
             if (!File.exist?("#{CALC_DATA_DIRECTORY}/#{skill_data_file_name}.csv"))
-                print("Pulling '#{CALC_DATA_DIRECTORY}#{skill_data_file_name}.csv' from master branch... ")
-
-                # Checks if the file returns a HTTPOK (2xx)
-                if (OSRS_Api_Wrapper::is_http_response_valid?(CALC_DATA_RAW_URL + CALC_DATA_DIRECTORY + skill_data_file_name + ".csv")) 
-
-                    # This variable stores the raw data from our GitHub repo making it ready to dump into a file local.
-                    repo_response = Net::HTTP.get(URI(CALC_DATA_RAW_URL + CALC_DATA_DIRECTORY + skill_data_file_name + ".csv"))
-
-                    # Simple write file statement using the data we pulled in the previous statement
-                    File.open(CALC_DATA_DIRECTORY + skill_data_file_name + ".csv", "a") {|file| file.write(repo_response)} 
-
-                    puts("done!")
-                    files_downloaded += 1
-                else
-                    # Remove the 404'd skill as other modules/files piggy-back off the @available_calcs variable
-                    @available_calcs = @available_calcs.delete(skill_data_file_name) 
-                    puts("file not found! (HTTP 404)")
-                end
-
-                new_info_for_user = true
+                puts("Requesting '#{CALC_DATA_DIRECTORY}#{skill_data_file_name}.csv' from the master branch... ")
+                files_to_pull << "#{skill_data_file_name}.csv"
             end
-
         end
+
+        puts("")
+        skill_calc_web_data = Async_Web_Responses::retrieve_web_data("#{CALC_DATA_RAW_URL}/#{CALC_DATA_DIRECTORY}", files_to_pull, "download")
+
+        skill_calc_web_data.each do |response|
+            if (response["status"] == 200)
+                puts("#{response["body"]["file_name"]}")
+                # Simple write file statement using the data we pulled in the previous statement
+                # File.open(CALC_DATA_DIRECTORY + skill_data_file_name + ".csv", "a") {|file| file.write(repo_response)} 
+                files_downloaded += 1
+            end
+        end
+
+        #         # Checks if the file returns a HTTPOK (2xx)
+        #         if (OSRS_Api_Wrapper::is_http_response_valid?(CALC_DATA_RAW_URL + CALC_DATA_DIRECTORY + skill_data_file_name + ".csv")) 
+
+        #             # This variable stores the raw data from our GitHub repo making it ready to dump into a file local.
+        #             repo_response = Net::HTTP.get(URI(CALC_DATA_RAW_URL + CALC_DATA_DIRECTORY + skill_data_file_name + ".csv"))
+
+        #             # Simple write file statement using the data we pulled in the previous statement
+        #             File.open(CALC_DATA_DIRECTORY + skill_data_file_name + ".csv", "a") {|file| file.write(repo_response)} 
+
+        #             puts("done!")
+        #             files_downloaded += 1
+        #         else
+        #             # Remove the 404'd skill as other modules/files piggy-back off the @available_calcs variable
+        #             @available_calcs = @available_calcs.delete(skill_data_file_name) 
+        #             puts("file not found! (HTTP 404)")
+        #         end
+
+        #         new_info_for_user = true
+        #     end
+
+        # end
 
         # Record the time after the potential downloads are finished
         end_time = Time.now 
@@ -111,6 +128,8 @@ module SkillCalcs
 
         # Remove the LEVEL DATA string out of the @available_calcs array of strings, like mentioned it's utilised in other functions
         @available_calcs.delete(LEVEL_DATA)
+
+        gets()
     end
 
     def self.get_available_calcs()
