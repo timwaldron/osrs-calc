@@ -12,11 +12,10 @@ class Main
     @username = nil
     @choice = nil
     @player_data = false
-    # @osrs_api = OSRS_Api_Wrapper.new()
-    login
+    login()
   end
 
-  def ascii_splash
+  def ascii_splash()
     puts " ____                   ____                         "
     puts "|  _ \\ _   _ _ __   ___/ ___|  ___ __ _ _ __   ___   "
     puts "| |_) | | | | '_ \\ / _ \\___ \\ / __/ _` | '_ \\ / _ \\  "
@@ -45,6 +44,7 @@ class Main
 
         spinner = TTY::Spinner.new("[:spinner] Checking if #{@username} exists... ", format: :classic)
         spinner.auto_spin # Automatic animation with default interval
+        
         @player_data = OSRS_Api_Wrapper::get_hiscore_data(@username)
         spinner.stop("Done!") # Stop animation
 
@@ -52,7 +52,8 @@ class Main
           pls_or_sorry_pls_string = "Sorry,"
         end
       end
-      menu
+      
+      menu()
     end
   end
 
@@ -65,9 +66,8 @@ class Main
       puts "1: View your skills"
       puts "2: Skill Calculator"
       puts "3: Notebook"
-      puts "4: Log out of #{@username}"
       puts ""
-      print "Option: "
+      print("Please select an option (or '!exit' to switch user): ")
       loop_logic(gets.strip.to_i)
     end
   end
@@ -88,7 +88,7 @@ class Main
 
   def display_skills
     print `clear`
-    puts "Skills: #{@username} -----------------------------"
+    puts "#{@username} - Hiscore Data"
     puts
     overall_maxed = []
     calculated_overall = false
@@ -156,29 +156,33 @@ class Main
 
   def skill_calculator
     Async_Web_Responses::check_calc_data()
-    skill_option = nil
     
-    while skill_option != "!exit"
-        print `clear`
-        puts "Calculators: ~~~#{@username}~~~"
-        puts ""
+    print(`clear`)
+    puts("Calculators: ~~~#{@username}~~~")
+    puts("")
         
-        calcs_available = SkillCalcs::get_available_calcs()
-        calcs_available.each_with_index do |skill_name, index|
-            puts("#{index + 1}: #{Prettifier::capitalize_string(skill_name)}")
-        end
+    calcs_available = SkillCalcs::get_available_calcs()
 
-        puts ""
+    calcs_available.each_with_index do |skill_name, index|
+        puts("#{index + 1}: #{Prettifier::capitalize_string(skill_name)}")
+    end
 
-        print "Please select an option (or '!exit' to quit): "
-        skill_option = gets().strip
+    puts("")
+
+    print("Please select an option (or '!exit' to quit): ")
+    skill_option = gets().strip
+
+    while(skill_option.to_i < 1 || skill_option.to_i > calcs_available.length)
 
         if (skill_option == "!exit")
-            break
+            return nil
         end
 
-        SkillCalcs::load_calculator(@player_data, calcs_available[skill_option.to_i - 1])
+        print("Please select a CORRECT option (or '!exit' to quit): ")
+        skill_option = gets().strip
     end
+
+    SkillCalcs::load_calculator(@player_data, calcs_available[skill_option.to_i - 1])
   end
 end
 

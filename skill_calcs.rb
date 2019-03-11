@@ -7,15 +7,10 @@ require 'csv'
 require 'terminal-table'
 
 module SkillCalcs
-    include Async_Web_Responses
      # Folder of the current working directory, future plan is to roll this out as ~/.calc_data/
-    CALC_DATA_DIRECTORY = "calc_data/"
-
-    # URL to the base data raw data in the master branch of the GitHub repository
-    CALC_DATA_RAW_URL = "https://raw.githubusercontent.com/timwaldron/osrs-calc/master/"
+    CALC_DATA_DIR = "#{Dir.home}/.osrs_buddy/calc_data/"
 
     # Unshifted onto the front of '@available_calcs' variable to make sure we download 'levels.csv' as it's not a skill calculator
-    LEVEL_DATA = "levels" 
 
     @grand_exchange_base_url = 'http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item='
 
@@ -34,7 +29,7 @@ module SkillCalcs
     def self.get_available_calcs()
         calculators = []
 
-        Dir.foreach("calc_data/") do |file_name|
+        Dir.foreach("#{Dir.home}/.osrs_buddy/calc_data/") do |file_name|
             if (file_name == "." || file_name == ".." || file_name.include?("levels"))
                 next
             end
@@ -64,7 +59,7 @@ module SkillCalcs
         end
 
         # Load the contents of the specific skills calculator CSV
-        skill_calc_data = File.open(CALC_DATA_DIRECTORY + skill_name_as_string + ".csv")
+        skill_calc_data = File.open(CALC_DATA_DIR + skill_name_as_string + ".csv")
 
         # parse our skill calc into a variable with the headers flag/arguement set to true
         skill_calc_data = CSV.parse(skill_calc_data, :headers => true) 
@@ -215,7 +210,7 @@ module SkillCalcs
     # simple function to get the total XP of a level 
     def self.get_exp_for_a_level(desired_level)
         # Using the IO class to read a specific line from our csv file
-        line_data = IO.readlines(CALC_DATA_DIRECTORY + LEVEL_DATA + ".csv")[desired_level + 1]
+        line_data = IO.readlines(CALC_DATA_DIR + "levels.csv")[desired_level + 1]
 
         # It has two columns, first one being level, second one being total xp
         column_data = line_data.split(",")
