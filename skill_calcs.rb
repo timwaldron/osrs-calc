@@ -63,7 +63,7 @@ module SkillCalcs
         files_to_pull = []
         temp_responses = {}
         # Run through the available calculators array
-        puts("Repository: #{CALC_DATA_RAW_URL}")
+        puts("Repository: https://github.com/timwaldron/osrs-calc")
         @available_calcs.each do |skill_data_file_name|
 
             # Checks if the file doesn't exist in our ./calc_data
@@ -78,7 +78,8 @@ module SkillCalcs
 
         skill_calc_web_data.each do |response|
             if (response["status"] == 200)
-                puts("#{response["body"]["file_name"]}")
+                # puts("#{response["body"]["file_name"]}")
+                puts("Response: #{response}")
                 # Simple write file statement using the data we pulled in the previous statement
                 # File.open(CALC_DATA_DIRECTORY + skill_data_file_name + ".csv", "a") {|file| file.write(repo_response)} 
                 files_downloaded += 1
