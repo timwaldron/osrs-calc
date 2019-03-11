@@ -4,7 +4,7 @@ require 'typhoeus'
 
 module Async_Web_Responses
 
-    def self.retrieve_web_data(base_url, array_of_items, type_of_parse = "json")# header_data = "rank,level,experience\n")
+    def self.retrieve_web_data(base_url, array_of_items, type_of_parse = "json")
         response_data = [] # Array of hashes
         start_time = Time.now
         number_of_requests = array_of_items.length
@@ -52,26 +52,30 @@ module Async_Web_Responses
 
 
     def self.check_calc_data()
+        print(`clear`)
         base_url = 'http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item='
         skill_list = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction"]
+        osrs_buddy_dir = "#{Dir.home}/.osrs_buddy/"
         calc_data_dir = "calc_data/"
-        github_repo_url = "https://raw.githubusercontent.com/timwaldron/osrs-calc/master/"
+        github_raw_repo_url = "https://raw.githubusercontent.com/timwaldron/osrs-calc/master/"
         files_pulled = 0
         dirs_made = 0
 
-        puts("Checking local files in directory 'calc_data/'")
+        puts("Checking local files in directory '$HOME/.osrs_buddy/'")
 
-        if (!Dir.exist?("calc_data/"))
-            Dir.mkdir("calc_data/")
-            puts("Directory 'calc_data/' doesn't exist, creating it in current working directory")
-            dirs_made += 1
+        if (!Dir.exist?(osrs_buddy_dir))
+
+            puts("Directory '#{osrs_buddy_dir}' doesn't exist, creating now")
+            Dir.mkdir(osrs_buddy_dir)
+            Dir.mkdir(osrs_buddy_dir + calc_data_dir)
+            dirs_made += 2
         end
 
         download_skills_queue = []
         skill_list.unshift("levels")
 
         skill_list.each do |skill|
-            if (!File.exist?(calc_data_dir + skill + ".csv"))
+            if (!File.exist?(osrs_buddy_dir + calc_data_dir + skill + ".csv"))
                 download_skills_queue << skill
             end
         end
@@ -86,7 +90,7 @@ module Async_Web_Responses
         iterator = 0
         requests = download_skills_queue.length.times.map do
         # skill_list.each do |item|
-            request = Typhoeus::Request.new(github_repo_url + calc_data_dir + download_skills_queue[iterator] + ".csv", followlocation: true)
+            request = Typhoeus::Request.new(github_raw_repo_url + "calc_data/" + download_skills_queue[iterator] + ".csv", followlocation: true)
             iterator += 1
             hydra.queue(request)
             request
@@ -104,9 +108,9 @@ module Async_Web_Responses
                 skill_line_data = response_data_array[1].split(",") # Split each indiviual lines by a comma
                 skill_name = skill_line_data[0] # The first index will always be the files name.
                 
-                puts(" * Pulled 'calc_data/#{skill_name}.csv' from the master branch...")
+                puts(" * Pulled './calc_data/#{skill_name}.csv' from the master branch...")
                 files_pulled += 1
-                File.open(calc_data_dir + skill_name + ".csv", "w") {|file| file.write(resp)}
+                File.open(osrs_buddy_dir + calc_data_dir + skill_name + ".csv", "w") {|file| file.write(resp)}
             end
         end
 
