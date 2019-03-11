@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="1050" height="250" src=./docs/osrs.jpg></p>
+  <img width="1050" height="250" src=./osrs.jpg></p>
   
 <h1 align="center"> 
 Oldschool RuneScape Buddy
@@ -57,42 +57,3 @@ Separate files were used, not only to organise the code but also to enable seaml
 During this project we ensured to make use of the webapp Trello, it was both of our first times using it. We found it smooth and seamless; improving both productivity and enjoyment.
 
 Github was another technology utilised to manage workflow. Initially the process seemed clunky and unintuitive. After making our first 20 commits within the first hour we saw the value of the system and have used it extensively during this project.
-
-# Screenshots 
-
-<h2 align="center"> 
-Initial Planning
-</h2>
-<p align="center">
-  <img width="250" height="250" src=docs/planning.jpg>
-  <img width="250" height="250" src=docs/planning1.jpg>
-  <img width="250" height="250" src=docs/planning2.jpg>
-</p>
-
-<p align="center">
-  <img width="250" height="250" src=docs/planning3.jpg>
-  <img width="250" height="250" src=docs/planning4.jpg>
-</p>
-
-
-<h2 align="center"> 
-Slack Communications
-</h2>
-<p align="center">
-  <img width="250" height="250" src=docs/slack1.png>
-  <img width="250" height="250" src=docs/slack2.png>
-</p>
-
-
-<h2 align="center"> 
-Trello Use
-</h2>
-<p align="center">
-  <img width="250" height="250" src=docs/trello1.png>
-  <img width="250" height="250" src=docs/trello2.png>
-</p>
-
-<p align="center">
-  <img width="250" height="250" src=docs/trello3.png>
-  <img width="250" height="250" src=docs/trello4.png>
-</p>
