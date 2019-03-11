@@ -1,9 +1,14 @@
 require './osrs_api_wrapper'
+require './prettifier'
+require './async_web_responses'
 require 'net/http'
 require 'tty-spinner'
 require 'csv'
+require 'pry'
+require 'terminal-table'
 
 module SkillCalcs
+    include Async_Web_Responses
      # Folder of the current working directory, future plan is to roll this out as ~/.calc_data/
     CALC_DATA_DIRECTORY = "calc_data/"
 
@@ -15,19 +20,15 @@ module SkillCalcs
 
     # Available calculators, future plan is to have this list potentially in GitHub so we can determine what calcs are avalable.
     # But this may limit someone who clones the repo from creating their own skill data
-    @available_calcs = ["cooking", "firemaking", "fishing", "woodcutting"]
+    #@available_calcs = ["attack", "defence", "strength", "hitpoints", "ranged", "prayer", "magic", "cooking", "woodcutting", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblore", "agility", "thieving", "slayer", "farming", "runecrafting", "hunter", "construction"]
+    @available_calcs = ["cooking", "firemaking", "fishing", "ranged", "woodcutting"]
 
     # @player_data is common variable name used throughout this project to store a hashed copy of
     # the user's hiscore data that's easily readable
     @player_data = false
 
     # Enable this to variable by setting it to true so you can test functions
-    @testing_mode = false
-
-    # Simple function to convert a string to have a capital letter, E.G: "cooking"->"Cooking"
-    def self.capitalize_string(string)
-        return string[0].upcase + string[1...string.length]
-    end
+    @testing_mode = true
 
     # Function to check if all the files that are utilised by this program are where they should be.
     def self.check_calc_data_files()
@@ -58,6 +59,8 @@ module SkillCalcs
         # Even though it's not a calc file it's still needed, so we'll temporarily wack it onto the front of the array
         @available_calcs.unshift(LEVEL_DATA)
 
+        # Stores the temporary responses of web requess
+        temp_responses = {}
         # Run through the available calculators array
         @available_calcs.each do |skill_data_file_name|
 
@@ -78,7 +81,7 @@ module SkillCalcs
                     files_downloaded += 1
                 else
                     # Remove the 404'd skill as other modules/files piggy-back off the @available_calcs variable
-                    @available_calcs.delete(skill_data_file_name) 
+                    @available_calcs = @available_calcs.delete(skill_data_file_name) 
                     puts("file not found! (HTTP 404)")
                 end
 
@@ -138,34 +141,41 @@ module SkillCalcs
         skill_calc_data = CSV.parse(skill_calc_data, :headers => true) 
 
         # Empty hash for storing our player data to pull data from
-        skill_calc_item_hash = {} 
-        
+        skill_calc_item_array = []
         # Run through each row of CSV data we've read into a variable
+        
         skill_calc_data.each_with_index do |row, index|
             # Create a new variable and set it to the value of the row variable when coerced into a hash
             row_data = row.to_hash
             
             # Create a new key in our hash
-            skill_calc_item_hash[skill_calc_data[index]] = row_data
+            skill_calc_item_array << row_data
         end
 
         print(`clear`)
-        puts("~~~~~ #{self.capitalize_string(skill_name_as_string)} Calculator ~~~~~")
+        puts("~~~~~ #{Prettifier::capitalize_string(skill_name_as_string)} Calculator ~~~~~")
         puts("")
-        puts("     Level: #{skill_level}")
-        puts("Experience: #{self.add_commas(skill_experience)}")
-        puts("")
+        puts("     Level:\t#{skill_level}")
+        puts("Experience:\t#{Prettifier::add_commas(skill_experience)}")
 
         # If the player already has the skill level 99 then we can't calculate the next level
         if (skill_level == 99)
-            puts("Very nice level 99 #{self.capitalize_string(skill_name_as_string)}")
+            puts("")
+            puts("   % to 99:\t#{Prettifier.progress_bar(100)}")
+            puts("")
+            puts("Very nice level 99 #{Prettifier::capitalize_string(skill_name_as_string)}")
             puts("But unfortunately we can't calculate a maxed skill")
             puts("")
-            puts("Press enter to return...")
+            print("Press enter to return...")
             gets()
             return nil
+        else
+            puts("")
+            puts("   % to #{skill_level + 1}:\t#{Prettifier.progress_bar(((skill_experience * 100).to_f / self.calculate_experience_gap(skill_experience, skill_level + 1)).to_i)}") # 13034431 is level 99
+            puts("   % to 99:\t#{Prettifier.progress_bar(((skill_experience * 100).to_f / 13034431).to_i)}") # 13034431 is level 99
         end
 
+        puts("")
         # Ask the user for input regarding their desired level
         print("Please enter your desired level (#{skill_level + 1}-99): ")
         desired_level = gets().strip
@@ -183,52 +193,83 @@ module SkillCalcs
         xp_to_desired_level = xp_of_desired_level - skill_experience
 
         # Call's what action they'll be doing depending on their skill: 'chop' wood, 'catch' fish, 'burn' logs
-        action_type = self.get_action_type(skill_name_as_string)
+        action_type = self.get_skill_info(skill_name_as_string)
 
         print(`clear`)
-        puts("To get from level #{skill_level} #{self.capitalize_string(skill_name_as_string)} (#{self.add_commas(skill_experience)} xp) to #{desired_level} (#{self.add_commas(xp_of_desired_level)} xp) you will need to #{action_type}")
+        puts("To get from level #{skill_level} #{Prettifier::capitalize_string(skill_name_as_string)} (#{Prettifier::add_commas(skill_experience)} xp) to #{desired_level} (#{Prettifier::add_commas(xp_of_desired_level)} xp) you will need to #{action_type[0]}")
         puts("")
 
-        # Cycle through all the rows in the CSV file that we loaded into a variable
-        skill_calc_item_hash.each do |key, item_data|
+        
+        array_of_item_ids = []
 
-            # Only show the items that the player has the level requirement for
-            if (item_data["level"].to_i <= skill_level)
+        skill_calc_item_array.each do |item|
+            array_of_item_ids << item["item_id"]
+        end
 
-                if (@testing_mode == true)
-                    amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-                    item_cost = OSRS_Api_Wrapper::get_item_price(item_data["item_id"].to_i)
-                    print("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
-                    puts("| Estimaged GP: #{self.add_commas(item_cost * amount_of_actions)}")
-                else
-                    amount_of_actions = xp_to_desired_level / item_data["experience"].to_i
-                    puts("#{self.add_commas(amount_of_actions)} x #{item_data["item"]}")
+        item_cost = Async_Web_Responses::get_item_ge_data(array_of_item_ids)
+        
+        item_array = []
+        item_cost.each_with_index do |hash, index|
+
+            if (hash["status"] == 200)
+                item_price = hash["body"]["item"]["current"]["price"]
+
+                if (hash["body"]["item"]["current"]["price"].class != Integer)
+                    item_price.gsub!(",", "")
+                end
+
+                # gets()
+                # item_price = hash["body"]["item"]["current"]["price"].gsub(",", "")
+                # puts("#{hash["body"]["item"]["name"]}")
+                item_array << {"item_name": hash["body"]["item"]["name"], "item_price": item_price.to_i}
+            end
+        end
+        
+        rows = []
+        only_show_available_items = true
+
+        if (only_show_available_items)
+            puts("Showing items you have the level requirement for")
+        end
+
+        item_array.each do |item_array_item|
+            skill_calc_item_array.each do |skill_calc_item|
+
+                if (only_show_available_items)
+                    if (item_array_item[:item_name].downcase == skill_calc_item["item"].downcase)
+                        item_cost = item_array_item[:item_price]
+                        amount_of_actions = xp_to_desired_level / skill_calc_item["experience"].to_i
+
+                        if (skill_calc_item["level"].to_i <= skill_level.to_i)
+                            rows << [Prettifier::add_commas(amount_of_actions), skill_calc_item["item"], Prettifier::add_commas(item_cost * amount_of_actions) + " GP"]
+                        end
+                    end
                 end
             end
         end
+
+        prof_cost = get_skill_info(skill_name_as_string)
+
+        table = Terminal::Table.new :headings => ['Actions', 'Item', "Estimated #{prof_cost[1]}"], :rows => rows
+
+        puts table
 
         puts("")
         print("Press enter to continue...")
         gets()
     end
 
-    # Function to take a string of numbers make it neat/readable: 10000000 -> 10,000,000
-    def self.add_commas(add_commas_to_string) 
-        comma_string = add_commas_to_string.to_s
-        return comma_string.reverse.scan(/\d{3}|.+/).join(',').reverse
-    end
-
     # Method takes a skill name as a string as an argument and returns a strong of the type of action associated with it
-    def self.get_action_type(skill_name)
+    def self.get_skill_info(skill_name)
         case skill_name.downcase
         when "woodcutting" # With the Woodcutting skill you chop logs
-            return "chop"  # E.g You need to 'chop' 10,000 x Willow Logs to get to level x
+            return ["chop", "profit"]  # E.g You need to 'chop' 10,000 x Willow Logs to get to level x
         when "cooking"
-            return "cook"
+            return ["cook", "cost"]
         when "fishing"
-            return "catch"
+            return ["catch", "profit"]
         when "firemaking"
-            return "burn"
+            return ["burn", "cost"]
         else
             return "do" # Do fish, do cakes, do ores.
         end
@@ -240,7 +281,7 @@ module SkillCalcs
         line_data = IO.readlines(CALC_DATA_DIRECTORY + LEVEL_DATA + ".csv")[desired_level - 1]
 
         # It has two columns, first one being level, second one being total xp
-        level_data = line_data.split(",")
-        return level_data[1].to_i
+        column_data = line_data.split(",")
+        return column_data[1].to_i
     end
 end

@@ -1,8 +1,9 @@
-require_relative "./skill_calcs"
+require "./skill_calcs"
 require "./osrs_api_wrapper"
 require "./todo"
 require "tty-spinner"
 require "awesome_print"
+
 
 class Main
   include SkillCalcs
@@ -88,9 +89,65 @@ class Main
     print `clear`
     puts "Skills: #{@username} -----------------------------"
     puts
-    @player_data.each do |key, value|
-      puts " #{key}:  #{value}"
+    overall_maxed = []
+    calculated_overall = false
+    iterations = 0
+
+    @player_data.each do |hiscore_entry, entry_hash| # hiscore_entry is the name, e.g Woodcutting, entry_hash a hash of Rank, Level and Experience
+        puts "    #{Prettifier::capitalize_string(hiscore_entry)}"
+
+        if (entry_hash["experience"].to_i < 0)
+            entry_hash["experience"] = "0"
+        end
+        
+        if (iterations < 24)
+            puts "\tLevel:\t\t#{entry_hash["level"]}"
+            puts "\tExp:\t\t#{Prettifier::add_commas(entry_hash["experience"])}"
+            puts "\tRank:\t\t#{Prettifier::add_commas(entry_hash["rank"])}"
+
+            percentage_to_99 = 0
+
+            if (iterations == 0)
+                skip_overall = false
+                @player_data.each do |temp_hiscore_entry, temp_entry_hash|
+                    if (!skip_overall)
+                        skip_overall = true
+                        next
+                    end
+
+                    if (temp_entry_hash["level"].to_i == 99)
+                        skill_percentage = 100
+                    else
+                        skill_percentage = ((temp_entry_hash["experience"].to_i * 100).to_f / 13034431).to_i
+                    end
+
+                    overall_maxed << skill_percentage
+                end
+
+                player_percentage = 0
+                overall_maxed.each do |item|
+                    player_percentage += item
+                end
+
+                # percentage_to_max = ((player_percentage * 100).to_f / 2300).to_i
+                percentage_to_max = ((player_percentage * 100).to_f / 2300).to_i
+                puts "\t% to max:\t#{Prettifier.progress_bar(percentage_to_max)}" # 13034431 is level 99
+            elsif (entry_hash["level"].to_i != 99)
+                percentage_to_99 = ((entry_hash["experience"].to_i * 100).to_f / 13034431).to_i
+                puts "\t% to 99:\t#{Prettifier.progress_bar(percentage_to_99)}" # 13034431 is level 99
+            else
+                puts "\t% to 99:\t#{Prettifier.progress_bar(100)}" # 13034431 is level 99
+            end
+
+        else
+            puts "\tRank:\t\t#{Prettifier::add_commas(entry_hash["rank"])}"
+            puts "\tAmount:\t\t#{Prettifier::add_commas(entry_hash["level"])}"
+        end
+
+        puts("")
+        iterations += 1
     end
+
     puts "--------------------------------------------------"
     print "Press enter to return to the menu"
     gets.strip.downcase
@@ -107,7 +164,7 @@ class Main
         
         calcs_available = SkillCalcs::get_available_calcs()
         calcs_available.each_with_index do |skill_name, index|
-            puts("#{index + 1}: #{SkillCalcs::capitalize_string(skill_name)}")
+            puts("#{index + 1}: #{Prettifier::capitalize_string(skill_name)}")
         end
 
         puts ""
